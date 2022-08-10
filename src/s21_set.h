@@ -28,7 +28,7 @@ namespace s21 {
         const_iterator_set(Key<T>* curr) : const_current(curr) {}
         T& operator *() {return const_current->data;}
         bool operator == (const const_iterator_set &right) {
-            return this->const_current->data == right.const_current->data;
+            return this->const_current == right.const_current;
         }
         bool operator != (const const_iterator_set &right) {
             return !(this->operator==(right));
@@ -67,7 +67,7 @@ namespace s21 {
             T temp = this->const_current->data;
             this->const_current = this->const_current->pBack;
 
-            if (temp == this->const_current->pLeft->data && this->const_current->pLeft != nullptr) {
+            if (temp == this->const_current->pLeft->data /*&& this->const_current->pLeft != nullptr*/) {
                 return *this;
             }
             else if (temp == this->const_current->pRight->data) {
@@ -166,15 +166,16 @@ namespace s21 {
         void swap(s21_set& other);  // меняет содержимое
         void merge(s21_set& other);  // соединяет узлы из другого контейнера
         iterator find(const Key<T>& key);  // находит элемент с определенным ключом
+        iterator find(const T key); 
         bool contains(const Key<T>& key);  // проверяет, содержит ли контейнер элемент с определенным ключом
-        void print(Key<T>* branch);
+
         void back_to_root();
-        void input_left(T value);
-        void input_right(T value);
+
         Key<T>* get_element();
 
         void set_copy(Key<T>* other);
-        
+
+        void input_in_branch(Key<T>* branch, T value);
     };
 }
 
