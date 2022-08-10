@@ -25,9 +25,7 @@ s21_set<T>::s21_set(s21_set<T> &s) : m_size(0),
 
 template<typename T>
 s21::s21_set<T> s21_set<T>::operator = (s21_set& value) {
-    
     this->clear();
-
     for (auto &&i : value) {
         this->insert(i);
     }
@@ -51,108 +49,38 @@ std::pair<T, bool> s21_set<T>::insert(const value_type& value) {
         element = new Key<T>();
         back_elem = new Key<T>();
         element->pRoot = element;
-        m_size++;
-        element->data = value;
-        // result.first;
+        result.first = element->data = value;
         result.second = true;
-
         element->pLeft = back_elem;
         element->pRight = back_elem;
-        back_elem->data = m_size;
+        back_elem->data = ++m_size;
     } else {
-        if (element->data > value) {
-            input_left(value);
-        }
-        else if (element->data < value) {
-            input_right(value);
-        }
+        input_in_branch(element, value);
     }
     return result;
 }
 
 template<typename T>
-void s21_set<T>::input_left(T value) {
-    Key<T>* temp;
-    if (element->pLeft == back_elem) {
-        temp = element;
-        element->pLeft = new Key<T>();
-        element = element->pLeft;
-        element->pBack = temp;
-        element->data = value;
-        element->pLeft = back_elem;
-        element->pRight = back_elem;
-        back_elem->pBack = element;
-        back_to_root();
-        back_elem->data = ++m_size;
-    }
-    else {
-        element = element->pLeft;
-        insert(value);
-    }
-}
-
-template<typename T>
-void s21_set<T>::input_right(T value) {
-    Key<T>* temp;
-    if (element->pRight == back_elem) {
-        temp = element;
-        element->last_element = false;
-        element->pRight = new Key<T>();
-        element = element->pRight;
-        element->pBack = temp;
-        element->data = value;
-        element->pLeft = back_elem;
-        element->pRight = back_elem;
-        element->last_element = true;
-        back_elem->pBack = element;
-        back_to_root();
-        back_elem->data = ++m_size;
-    }
-    else {
-        element = element->pRight;
-        insert(value);
-    }
-}
-
-template<typename T>
 bool s21_set<T>::contains(const Key<T>& key) {
     for (auto &&i : *this) {
-        if(i.const_current->data == key.data) {return true;}
+        if(i == key.data) {return true;}
     }
     return false;
 }
 
-
 template<typename T>
 void s21_set<T>::clear() {
-    if (this->element != nullptr) {
         if(element->pLeft != nullptr) {
             this->element = this->element->pLeft;
             this->clear();
-            delete element->pLeft;
+            delete element;
         }
         else if(element->pRight != nullptr) {
             this->element = this->element->pRight;
             this->clear();
-            delete element->pRight;
+            delete element;
         }
-    }
-}
-
-template<typename T>
-void s21_set<T>::print(Key<T>* branch) {
-    if (branch == back_elem) {return;}
-    // for (auto &&i : *this) {
-    //     std::cout << i <<std::endl;
-    // }
-
-    if (branch->pLeft != nullptr) {
-        this->print(branch->pLeft);   
-        std::cout << branch->data << std::endl;
-    }
-    if (branch->pRight != nullptr) {
-        this->print(branch->pRight);
-    }
+        element = nullptr;
 }
 
 template<typename T>
@@ -169,6 +97,26 @@ template<typename T>
 
 template<typename T>
 void s21::s21_set<T>::erase(iterator pos) {
+    // std::cout << this->element->pRoot->data << std::endl;
+    for (auto &&i = begin(); i != end(); ++i) {
+        if(*i == pos.const_current->data) {
+            if ((pos.const_current->pLeft == back_elem) && (pos.const_current->pRight == back_elem)) {
+                if (pos.const_current->pBack->pRight->data == pos.const_current->data) {
+                    pos.const_current->pBack->pRight = back_elem;
+                }
+                if (pos.const_current->pBack->pLeft->data == pos.const_current->data) {
+                    pos.const_current->pBack->pLeft = back_elem;
+                }
+                if(pos.const_current->last_element) {
+                    pos.const_current->pBack->last_element = true;
+                }
+                delete pos.const_current;
+                this->m_size--;
+            } else {
+                
+            }
+        }
+    }
 }
 
 template<typename T>
@@ -180,23 +128,11 @@ void s21::s21_set<T>::swap(s21_set& other) {
 
 template<typename T>
 void s21::s21_set<T>::merge(s21_set& other) {
-    for (auto &&i : other) {
-        this->insert(i);
-    }
+    this->set_copy(other.element);
 }
 
 template<typename T>
 void s21::s21_set<T>::set_copy(Key<T>* other) {
-    
-    // if (other->pLeft != nullptr) {
-    //     this->set_copy(other->pLeft);
-    //     this->insert(other->data);
-    // }
-    // if (other->pRight != nullptr) {
-    //     this->set_copy(other->pRight);
-    //     this->insert(other->pRight->data);
-    // }
-
     if (other->pLeft != nullptr) {
         this->set_copy(other->pLeft);
         this->insert(other->data);
@@ -206,7 +142,51 @@ void s21::s21_set<T>::set_copy(Key<T>* other) {
     }
 }
 
-// template<typename T>
-// iterator s21::s21_set<T>::find(const Key<T>& key) {
-//     return iterator();
-// }
+template<typename T>
+typename s21::s21_set<T>::iterator s21::s21_set<T>::find(const Key<T>& key) {
+    for (auto i = begin(); i != end(); ++i) {
+        if(*i == key.data) {return i;}
+    }
+    return iterator();
+}
+
+template<typename T>
+typename s21::s21_set<T>::iterator s21::s21_set<T>::find(const T key) {
+    for (auto i = begin(); i != end(); ++i) {
+        if(*i == key) {return i;}
+    }
+    return iterator();
+}
+
+template<typename T>
+ void s21::s21_set<T>::input_in_branch(Key<T>* branch, T value) {
+    if(branch->data > value) {
+        if (branch->pLeft != back_elem) {
+            input_in_branch(branch->pLeft, value);
+        } else {
+            branch->pLeft = new Key<T>();
+                branch->pLeft->pBack = branch;
+                branch = branch->pLeft;
+                branch->data = value;
+                branch->pLeft = back_elem;
+                branch->pRight = back_elem;
+                back_elem->pBack = branch;
+                back_elem->data = ++m_size;
+        }
+    } else {
+        if (branch->pRight != back_elem) {
+            input_in_branch(branch->pRight, value);
+        } else {
+            branch->pRight = new Key<T>();
+                branch->last_element = false;
+                branch->pRight->pBack = branch;
+                branch = branch->pRight;
+                branch->data = value;
+                branch->pLeft = back_elem;
+                branch->pRight = back_elem;
+                branch->last_element = true;
+                back_elem->pBack = branch;
+                back_elem->data = ++m_size;
+        }
+    }
+ }
