@@ -55,6 +55,8 @@ namespace s21 {
             void swap(s21_array& other);  // меняет содержимое
             void fill(const_reference value);  // присваивает заданное значение value всем элементам в контейнере
     };
+    
+    #include "s21_array.cpp"
 }
 
 #endif  // S21_ARRAY_H

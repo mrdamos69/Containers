@@ -71,4 +71,6 @@ namespace s21 {
     };
 }
 
+#include "s21_vector.cpp"
+
 #endif  // S21_VECTOR_H

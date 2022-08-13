@@ -128,6 +128,8 @@ namespace s21 {
 
         void clear();  // очищает содержимое
     };
+    
+    // #include "s21_list.cpp"
 }
 
 #endif  // S21_LIST_H

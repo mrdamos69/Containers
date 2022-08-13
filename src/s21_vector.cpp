@@ -191,3 +191,5 @@ void s21_vector<T>::clear() {
         this->pop_back();
     }
 }
+
+template class s21_vector<int>;

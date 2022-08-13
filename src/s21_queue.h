@@ -42,6 +42,8 @@ namespace s21 {
 
         void swap(s21_queue& other);  // Меняет местами элементы двух списков
     };
+
+    #include "s21_queue.cpp"
 }
 
 #endif  // S21_QUEUE_H

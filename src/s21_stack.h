@@ -43,6 +43,8 @@ namespace s21 {
 
         void clear();
     };
+
+    #include "s21_stack.cpp"
 }
 
 #endif  // S21_STACK_H

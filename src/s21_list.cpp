@@ -3,13 +3,13 @@
 using namespace s21;
 
 template<typename T>
-s21::s21_list<T>::s21_list(size_type n) : m_size(0), head(nullptr), tail(nullptr) {;
+s21_list<T>::s21_list(size_type n) : m_size(0), head(nullptr), tail(nullptr) {;
     while(n--)
         this->push_back(0);
 }
 
 template<typename T>
-s21::s21_list<T>::s21_list(const s21_list &l) : m_size(0), head(nullptr), tail(nullptr) {
+s21_list<T>::s21_list(const s21_list &l) : m_size(0), head(nullptr), tail(nullptr) {
     Node<value_type>* current =  l.head;
     while (current != l.tail) {
         this->push_back(current->data);
@@ -18,12 +18,12 @@ s21::s21_list<T>::s21_list(const s21_list &l) : m_size(0), head(nullptr), tail(n
 }
 
 template<typename T>
-s21::s21_list<T>::s21_list(s21_list &&l) : s21::s21_list<T>(l) {
+s21_list<T>::s21_list(s21_list &&l) : s21_list<T>(l) {
     l.clear();
 }
 
 template<typename T>
-s21::s21_list<T>::s21_list(std::initializer_list<value_type> const &items) {
+s21_list<T>::s21_list(std::initializer_list<value_type> const &items) {
     this->m_size = 0;
     this->head = nullptr;
     this->tail = nullptr;
@@ -33,12 +33,12 @@ s21::s21_list<T>::s21_list(std::initializer_list<value_type> const &items) {
 }
 
 template<typename T>
-s21::s21_list<T>::~s21_list() {
+s21_list<T>::~s21_list() {
     this->clear();
 }
 
 template<typename T>
-void s21::s21_list<T>::push_back(value_type data) {
+void s21_list<T>::push_back(value_type data) {
     if (head == nullptr && tail == nullptr) {
         head = new Node<T>(data);
         tail = new Node<T>;
@@ -49,23 +49,23 @@ void s21::s21_list<T>::push_back(value_type data) {
         while (current->pNext != tail) {
             current = current->pNext;
         }
-        Node<T>* temp = current;  // <======
+        Node<T>* temp = current;
         current->pNext = new Node<T>(data);
         current = current->pNext;
-        current->pBack = temp;  // <======
-        tail->pBack = current;  // <======
+        current->pBack = temp;
+        tail->pBack = current;
         current->pNext = tail;
     }
     m_size++;
 }
 
 template<typename T>
-void s21::s21_list<T>::push_front(value_type data) {
+void s21_list<T>::push_front(value_type data) {
     if (head == nullptr && tail == nullptr) {
         head = new Node<value_type>(data, head);
         tail = new Node<T>;
         head->pNext = tail;
-        tail->pBack = head;  // <======
+        tail->pBack = head;
         tail->pNext = head->pNext;
     } else {
         head = new Node<value_type>(data, head);
@@ -74,12 +74,12 @@ void s21::s21_list<T>::push_front(value_type data) {
 }
 
 template<typename T>
-void s21::s21_list<T>::pop_back() {
+void s21_list<T>::pop_back() {
     this->erase(this->m_size - 1);
 }
 
 template<typename T>
-void s21::s21_list<T>::pop_front() {
+void s21_list<T>::pop_front() {
     Node<value_type>* current = this->head;
     this->head = this->head->pNext;
     delete current;
@@ -87,7 +87,7 @@ void s21::s21_list<T>::pop_front() {
 }
 
 template<typename T>
-T& s21::s21_list<T>::operator [] (const int index) {
+T& s21_list<T>::operator [] (const int index) {
     int counter = 0;
     Node<value_type>* current = this->head;
     while (current != nullptr) {
@@ -101,7 +101,7 @@ T& s21::s21_list<T>::operator [] (const int index) {
 }
 
 template<typename T>
-s21::s21_list<T>&  s21::s21_list<T>::operator = (s21_list &l) {
+s21_list<T>&  s21_list<T>::operator = (s21_list &l) {
     if (head) {
         this->clear();
     }
@@ -112,12 +112,12 @@ s21::s21_list<T>&  s21::s21_list<T>::operator = (s21_list &l) {
 }
 
 template<typename T>
-bool s21::s21_list<T>::empty() {
+bool s21_list<T>::empty() {
     return !(this->m_size > 0);
 }
 
 template<typename T>
-typename s21::s21_list<T>::iterator s21::s21_list<T>::insert(size_t index, value_type value) {
+typename s21_list<T>::iterator s21_list<T>::insert(size_t index, value_type value) {
     auto result = this->begin();
     if (index == 0) {
         push_front(value);
@@ -133,7 +133,7 @@ typename s21::s21_list<T>::iterator s21::s21_list<T>::insert(size_t index, value
 }
 
 template<typename T>
-typename s21::s21_list<T>::iterator s21::s21_list<T>::insert(iterator pos, const_reference value) {
+typename s21_list<T>::iterator s21_list<T>::insert(iterator pos, const_reference value) {
     size_t index = 0;
     Node<T>* current;
     for (auto i = this->begin(); i != this->end(); ++i, index++) {
@@ -150,13 +150,13 @@ typename s21::s21_list<T>::iterator s21::s21_list<T>::insert(iterator pos, const
         current->pNext = new Node<value_type>(value, current->pNext);
         m_size++;
     }
-    s21::iterator_cl<T> result;
+    iterator_cl<T> result;
     result.const_current = current->pNext;
     return result;
 }
 
 template<typename T>
-void s21::s21_list<T>::erase(int index) {
+void s21_list<T>::erase(int index) {
     if (index == 0) {
         pop_front();
     } else {
@@ -172,14 +172,14 @@ void s21::s21_list<T>::erase(int index) {
 }
 
 template<typename T>
-void s21::s21_list<T>::swap(s21_list& other) {
+void s21_list<T>::swap(s21_list& other) {
     s21_list<T> temp(*this);
     *this = other;
     other = temp;
 }
 
 template<typename T>
-void s21::s21_list<T>::reverse() {
+void s21_list<T>::reverse() {
     s21_list<T> temp;
     for (auto &&i : *this) {
         temp.push_front(i);
@@ -188,8 +188,8 @@ void s21::s21_list<T>::reverse() {
 }
 
 template<typename T>
-void s21::s21_list<T>::sort() {
-    s21::s21_list<T> temp_this;
+void s21_list<T>::sort() {
+    s21_list<T> temp_this;
     temp_this = *this;
     T temp;
     for (size_t i = 0; i < this->m_size - 1; i++) {
@@ -205,7 +205,7 @@ void s21::s21_list<T>::sort() {
 }
 
 template<typename T>
-void s21::s21_list<T>::merge(s21_list& other) {
+void s21_list<T>::merge(s21_list& other) {
     for (auto &&i : other) {
         this->push_back(i);
     }
@@ -213,7 +213,7 @@ void s21::s21_list<T>::merge(s21_list& other) {
 }
 
 template<typename T>
-void s21::s21_list<T>::unique() {
+void s21_list<T>::unique() {
     Node<value_type>* current = this->head;
     s21_list<T> temp;
     T temp_data;
@@ -228,8 +228,8 @@ void s21::s21_list<T>::unique() {
 }
 
 template<typename T>
-void s21::s21_list<T>::splice(const_iterator pos, s21_list& other) {
-    s21::iterator_cl<T> temp_iter;
+void s21_list<T>::splice(const_iterator pos, s21_list& other) {
+    iterator_cl<T> temp_iter;
     temp_iter.const_current = pos.const_current;
     for (auto &&i : *this) {
         if (i == *pos) {
@@ -242,12 +242,12 @@ void s21::s21_list<T>::splice(const_iterator pos, s21_list& other) {
 }
 
 template<typename T>
-size_t s21::s21_list<T>::max_size() {
+size_t s21_list<T>::max_size() {
     return MAX_SIZE;
 }
 
 template<typename T>
-void s21::s21_list<T>::clear() {
+void s21_list<T>::clear() {
     while (m_size) {
         this->pop_front();
     }
@@ -257,17 +257,17 @@ void s21::s21_list<T>::clear() {
 }
 
 template<typename T>
-size_t s21::s21_list<T>::get_size() {
+size_t s21_list<T>::get_size() {
     return this->m_size;
 }
 
 template<typename T>
-const T& s21::s21_list<T>::front() {
+const T& s21_list<T>::front() {
     return this->head->data;
 }
 
 template<typename T>
-const T& s21::s21_list<T>::back() {
+const T& s21_list<T>::back() {
     if (head == nullptr) {
         return this->head->data;
     } else {
