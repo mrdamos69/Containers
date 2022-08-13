@@ -177,6 +177,8 @@ namespace s21 {
 
         void input_in_branch(Key<T>* branch, T value);
     };
+
+    #include "s21_set.cpp"
 }
 
 #endif  // S21_SET_H
