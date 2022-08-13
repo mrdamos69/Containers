@@ -113,7 +113,21 @@ void s21::s21_set<T>::erase(iterator pos) {
                 delete pos.const_current;
                 this->m_size--;
             } else {
-                
+                if (pos.const_current->pRoot == pos.const_current) {
+                    Key<T>* temp_data = pos.const_current;
+                    pos.const_current = pos.const_current->pRight;
+                    while (pos.const_current->pLeft != back_elem) {
+                        pos.const_current = pos.const_current->pLeft;
+                    }
+                    temp_data->data = pos.const_current->data;
+                    pos.const_current->pBack->pLeft = back_elem;
+                    delete pos.const_current;
+                }
+                if (pos.const_current->data < pos.const_current->pRoot->data) {
+                    
+                } else {
+
+                }
             }
         }
     }
