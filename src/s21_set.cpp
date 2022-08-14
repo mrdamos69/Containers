@@ -202,22 +202,3 @@ void s21::s21_set<T>::input_in_branch(Key<T>* branch, T value) {
         }
     }
 }
-
-
-// int main() {
-//     s21_set<int> s21_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
-//     auto x = s21_set_1.end();
-//     //for (auto &&i : s21_set_1) {
-//     //    std::cout << "s21_set: " << i << std::endl; 
-//     //}
-//     //std::cout << std::endl;
-//     //x--;
-//     //x--;
-//     std::cout << x.const_current->data << std::endl;
-
-//     //s21_set_1.erase(x);
-//     //for (auto&& i : s21_set_1) {
-//     //    std::cout << "s21_set: " << i << std::endl;
-//     //}
-//     return 0;
-// }
