@@ -1113,8 +1113,8 @@ TEST(Test_s21_queue, s21_queue_test_size) {
 
 
 TEST(Test_s21_set, s21_set_test_set_1) {
-    s21_set<int> s21_set_1 {10, 6, 12, 3, 13, 2, -4, 1, 18};
-    set<int> std_set_1 {10, 6, 12, 3, 13, 2, -4, 1, 18};
+    s21_set<int> s21_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+    set<int> std_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
     
     auto x = std_set_1.begin();
     for (auto &i : s21_set_1) {
@@ -1135,8 +1135,8 @@ TEST(Test_s21_set, s21_set_test_set_1) {
 }
 
 TEST(Test_s21_set, s21_set_test_iterator_1) {
-    s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8};
-    set<int> std_set_1 {5, 3, 7, 2, 4, 6, 8};
+    s21_set<int> s21_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+    set<int> std_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
 
     auto i = s21_set_1.end();
     for (auto y = std_set_1.end(); y != std_set_1.begin(); y--) {
@@ -1280,19 +1280,14 @@ TEST(Test_s21_set, s21_set_test_erase_0) {
 
 TEST(Test_s21_set, s21_set_test_erase_1) {
     
-    s21_set<int> s21_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+    s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8};
+    set<int> std_set_1 {5, 3, 7, 2, 4, 6, 8};
+    auto x = s21_set_1.end();
+    auto y = std_set_1.end();
+    x--; y--;
 
-    set<int> std_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
-
-    // auto x = s21_set_1.end();
-    // auto y = std_set_1.end();
-    // x--; y--;
-    // x--; y--;
-    // x--; y--;
-    // x--; y--;
-
-    // s21_set_1.erase(x);
-    // std_set_1.erase(y);
+    s21_set_1.erase(x);
+    std_set_1.erase(y);
 
     auto it = std_set_1.begin();
     for (auto &i : s21_set_1) {
@@ -1309,7 +1304,94 @@ TEST(Test_s21_set, s21_set_test_erase_1) {
     }
 }
 
+TEST(Test_s21_set, s21_set_test_erase_2) {
+    s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8};
+    set<int> std_set_1 {5, 3, 7, 2, 4, 6, 8};
+    auto x = s21_set_1.end();
+    auto y = std_set_1.end();
+    x--; y--;
 
+    s21_set_1.erase(x);
+    std_set_1.erase(y);
+
+    auto it = std_set_1.begin();
+    for (auto &i : s21_set_1) {
+        // cout << "s21_set: " << i << " == " << *it << endl;
+        ASSERT_EQ(i, *it);
+        it++;
+    }
+
+    auto s21_it = s21_set_1.begin();
+    for (auto &i : std_set_1) {
+        // cout << "s21_set: " << *s21_it << endl;
+        ASSERT_EQ(i, *s21_it);
+        s21_it++;
+    }
+}
+
+TEST(Test_s21_set, s21_set_test_erase_3) {
+    s21_set<int> s21_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+    set<int> std_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+    auto x = s21_set_1.end();
+    auto y = std_set_1.end();
+    x--; y--;
+    x--; y--;
+    x--; y--;
+    x--; y--;
+    x--; y--;
+    x--; y--;
+
+    // std::cout << *x << std::endl;
+    s21_set_1.erase(x);
+    std_set_1.erase(y);
+
+    auto it = std_set_1.begin();
+    for (auto &i : s21_set_1) {
+        // cout << "s21_set: " << i << " == " << *it << endl;
+        ASSERT_EQ(i, *it);
+        it++;
+    }
+
+    auto s21_it = s21_set_1.begin();
+    for (auto &i : std_set_1) {
+        // cout << "s21_set: " << *s21_it << endl;
+        ASSERT_EQ(i, *s21_it);
+        s21_it++;
+    }
+}
+
+TEST(Test_s21_set, s21_set_test_erase_4) {
+    s21_set<int> s21_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+    set<int> std_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+    auto x = s21_set_1.begin();
+    auto y = std_set_1.begin();
+    x++; y++;
+    x++; y++;
+    x++; y++;
+    // x++; y++;
+    // x++; y++;
+    // x++; y++;
+    // x++; y++;
+    // x++; y++;
+
+    std::cout << *x << std::endl;
+    s21_set_1.erase(x);
+    std_set_1.erase(y);
+
+//     auto it = std_set_1.begin();
+//     for (auto &i : s21_set_1) {
+//         // cout << "s21_set: " << i << " == " << *it << endl;
+//         ASSERT_EQ(i, *it);
+//         it++;
+//     }
+
+//     auto s21_it = s21_set_1.begin();
+//     for (auto &i : std_set_1) {
+//         // cout << "s21_set: " << *s21_it << endl;
+//         ASSERT_EQ(i, *s21_it);
+//         s21_it++;
+//     }
+}
 
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
