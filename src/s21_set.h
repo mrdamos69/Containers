@@ -5,7 +5,7 @@
 #include <initializer_list>
 #include <utility>
 #include "s21_abstract_class.h"
-#define MAX_SIZE_SET 777
+#define MAX_SIZE_SET 230584300921369395
 
 namespace s21 {
 

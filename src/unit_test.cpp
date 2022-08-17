@@ -1396,6 +1396,13 @@ TEST(Test_s21_set, s21_set_test_erase_4) {
     }
 }
 
+TEST(Test_s21_set, s21_set_test_max_size) {
+    s21_set<int> s21_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+    set<char> std_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
+
+    ASSERT_EQ(s21_set_1.max_size(), s21_set_1.max_size());
+}
+
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

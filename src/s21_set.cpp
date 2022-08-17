@@ -24,6 +24,11 @@ back_elem(nullptr) {
 }
 
 template<typename T>
+s21::s21_set<T>::s21_set(s21_set&& s) : s21_set<T>(s) {
+    s.clear();
+}
+
+template<typename T>
 s21::s21_set<T> s21_set<T>::operator = (s21_set& value) {
     this->clear();
     for (auto&& i : value) {
@@ -35,6 +40,12 @@ s21::s21_set<T> s21_set<T>::operator = (s21_set& value) {
 template<typename T>
 size_t s21_set<T>::get_size() {
     return m_size;
+}
+
+template<typename T>
+size_t s21::s21_set<T>::max_size()
+{
+    return MAX_SIZE_SET;
 }
 
 template<typename T>
@@ -142,7 +153,7 @@ void s21::s21_set<T>::erase(iterator pos) {
                     delete pos.const_current->pLeft;
                     // delete pos.const_current->pRight;
                     delete pos.const_current;
-                    
+
                     break;
                 }
             }
