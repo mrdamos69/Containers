@@ -9,7 +9,7 @@
 
 namespace s21 {
 
-template<typename T>
+    template<typename T>
     class Key {
     public:
         Key* pLeft = nullptr;
@@ -101,6 +101,9 @@ template<typename T>
 
             if (this->const_current->pLeft->data < this->const_current->data && this->const_current->pLeft->pLeft != nullptr) {
                 this->const_current = this->const_current->pLeft;
+                while (this->const_current->pRight->pRight != nullptr) {
+                    this->const_current = this->const_current->pRight;
+                }
                 return *this;
             }
 
@@ -113,6 +116,11 @@ template<typename T>
 
             if (temp == this->const_current->pLeft->data) {
                 this->const_current = this->const_current->pBack;
+                if (this->const_current->pLeft->pLeft && temp == this->const_current->pLeft->pLeft->data) {
+                    while (this->const_current->pBack != nullptr) {
+                        this->const_current = this->const_current->pBack;
+                    }
+                }
                 return *this;
             }
 
@@ -194,6 +202,8 @@ template<typename T>
         void set_copy(Key<T>* other);
 
         void input_in_branch(Key<T>* branch, T value);
+
+        void I_ll_be_back();
     };
 
     #include "s21_set.cpp"

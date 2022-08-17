@@ -58,6 +58,7 @@ std::pair<T, bool> s21_set<T>::insert(const value_type& value) {
     else {
         input_in_branch(element, value);
     }
+    I_ll_be_back();
     return result;
 }
 
@@ -109,6 +110,7 @@ void s21::s21_set<T>::erase(iterator pos) {
                 }
                 delete pos.const_current;
                 this->m_size--;
+                break;
             }
             else {
                 if (pos.const_current->pRoot == pos.const_current) {
@@ -120,10 +122,28 @@ void s21::s21_set<T>::erase(iterator pos) {
                     temp_data->data = pos.const_current->data;
                     pos.const_current->pBack->pLeft = back_elem;
                     delete pos.const_current;
+                    this->m_size--;
+                    break;
                 } else {
-                    pos.const_current->pLeft->data = pos.const_current->data;
+                    back_to_root();
+
+                    if (pos.const_current->pBack->pRight->data == pos.const_current->data) {
+                        pos.const_current->pBack->pRight = back_elem;
+                    }
+                    if (pos.const_current->pBack->pLeft->data == pos.const_current->data) {
+                        pos.const_current->pBack->pLeft = back_elem;
+                    }
+                    
+                    pos.const_current->pBack = nullptr;
+
+                    set_copy(pos.const_current->pLeft);
+                    set_copy(pos.const_current->pRight);
+
                     delete pos.const_current->pLeft;
-                    pos.const_current->pLeft = back_elem;
+                    // delete pos.const_current->pRight;
+                    delete pos.const_current;
+                    
+                    break;
                 }
             }
         }
@@ -144,11 +164,9 @@ void s21::s21_set<T>::merge(s21_set& other) {
 
 template<typename T>
 void s21::s21_set<T>::set_copy(Key<T>* other) {
-    if (other->pLeft != nullptr) {
+    if (other->pLeft && other->pRight) {
         this->set_copy(other->pLeft);
         this->insert(other->data);
-    }
-    if (other->pRight != nullptr) {
         this->set_copy(other->pRight);
     }
 }
@@ -191,7 +209,7 @@ void s21::s21_set<T>::input_in_branch(Key<T>* branch, T value) {
             input_in_branch(branch->pRight, value);
         }
         else {
-            branch->pRight = new Key<T>();
+            branch->pRight = new Key<T>(); 
             branch->pRight->pBack = branch;
             branch = branch->pRight;
             branch->data = value;
@@ -201,4 +219,14 @@ void s21::s21_set<T>::input_in_branch(Key<T>* branch, T value) {
             back_elem->data = ++m_size;
         }
     }
+}
+
+template<typename T>
+void s21::s21_set<T>::I_ll_be_back() {
+    back_to_root();
+    while (this->element->pRight != back_elem) {
+        this->element = this->element->pRight;
+    }
+    back_elem->pBack = this->element;
+    back_to_root();
 }

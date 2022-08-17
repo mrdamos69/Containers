@@ -4,7 +4,7 @@ using namespace s21;
 template <typename T>
 void s21_vector<T>::reserve_more_capacity(size_t size) {
     if (size > m_capacity) {
-        value_type *buff = new value_type[size];
+        value_type *buff = new value_type[size]();
         for (size_t i = 0; i < m_size; ++i)
             buff[i] = std::move(arr[i]);
         delete[] arr;
@@ -15,7 +15,7 @@ void s21_vector<T>::reserve_more_capacity(size_t size) {
 
 template <typename T>
 s21_vector<T>::s21_vector(std::initializer_list<value_type> const &items) {
-    arr = new value_type[items.size()];
+    arr = new value_type[items.size()]();
     int i = 0;
     for (auto it = items.begin(); it != items.end(); it++) {
         arr[i] = *it;
