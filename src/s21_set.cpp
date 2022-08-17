@@ -24,6 +24,11 @@ back_elem(nullptr) {
 }
 
 template<typename T>
+s21::s21_set<T>::s21_set(s21_set&& s) : s21_set<T>(s) {
+    s.clear();
+}
+
+template<typename T>
 s21::s21_set<T> s21_set<T>::operator = (s21_set& value) {
     this->clear();
     for (auto&& i : value) {
@@ -35,6 +40,11 @@ s21::s21_set<T> s21_set<T>::operator = (s21_set& value) {
 template<typename T>
 size_t s21_set<T>::get_size() {
     return m_size;
+}
+
+template<typename T>
+size_t s21::s21_set<T>::max_size() {
+    return MAX_SIZE_SET;
 }
 
 template<typename T>
@@ -125,6 +135,8 @@ void s21::s21_set<T>::erase(iterator pos) {
                     this->m_size--;
                     break;
                 } else {
+                    back_to_root();
+
                     if (pos.const_current->pBack->pRight->data == pos.const_current->data) {
                         pos.const_current->pBack->pRight = back_elem;
                     }
@@ -134,11 +146,12 @@ void s21::s21_set<T>::erase(iterator pos) {
                     
                     pos.const_current->pBack = nullptr;
 
-                    back_to_root();
-
                     set_copy(pos.const_current->pLeft);
                     set_copy(pos.const_current->pRight);
 
+                    delete pos.const_current->pLeft;
+                    // delete pos.const_current->pRight;
+                    delete pos.const_current;
 
                     break;
                 }
@@ -161,11 +174,9 @@ void s21::s21_set<T>::merge(s21_set& other) {
 
 template<typename T>
 void s21::s21_set<T>::set_copy(Key<T>* other) {
-    if (other->pLeft != nullptr) {
+    if (other->pLeft && other->pRight) {
         this->set_copy(other->pLeft);
         this->insert(other->data);
-    }
-    if (other->pRight != nullptr) {
         this->set_copy(other->pRight);
     }
 }
