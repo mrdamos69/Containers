@@ -148,11 +148,11 @@ void s21::s21_set<T>::erase(iterator pos) {
 
                     set_copy(pos.const_current->pLeft);
                     set_copy(pos.const_current->pRight);
-
+                    /*******************************/
                     delete pos.const_current->pLeft;
                     // delete pos.const_current->pRight;
                     delete pos.const_current;
-
+                    /*******************************/
                     break;
                 }
             }

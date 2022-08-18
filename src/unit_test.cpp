@@ -1406,7 +1406,45 @@ TEST(Test_s21_set, s21_set_test_max_size) {
 
 TEST(Test_s21_map, s21_map_test_map_1) {
     s21_map<int, char> s21_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
-    // map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, '§'}, {8, '^'}};
+    map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    auto y = std_map_1.begin();
+    for (auto i = s21_map_1.begin(); i != s21_map_1.end(); ++i, ++y) {
+        // std::cout << (*i).first << " ( " << (*i).second << " )" << " == " << (*y).first << " ( " << (*y).second << " )" << std::endl;
+        ASSERT_EQ((*i).first, (*y).first);
+        ASSERT_EQ((*i).second, (*y).second);
+    }
+
+}
+
+TEST(Test_s21_map, s21_map_test_map_2) {
+    s21_map<int, char> s21_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    auto y = std_map_1.end();
+    for (auto i = s21_map_1.end(); i != s21_map_1.begin(); --i, --y) {
+        if (i != s21_map_1.end())
+            std::cout << (*i).first << " ( " << (*i).second << " )" << " == " << (*y).first << " ( " << (*y).second << " )" << std::endl;
+    }
+}
+
+TEST(Test_s21_map, s21_map_test_map_3) {
+    s21_map<int, char> s21_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    s21_map<int, char> s21_map_2  {{10, '?'}, {5, '!'}, {15, '"'}, {3, ','}, {7, ':'}, {13, '-'}, {17, '='}};
+    
+    map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    map<int, char> std_map_2 {{10, '?'}, {5, '!'}, {15, '"'}, {3, ','}, {7, ':'}, {13, '-'}, {17, '='}};
+    // s21_map_1.swap(s21_map_2);
+    std_map_1.swap(std_map_2);
+    auto y = std_map_1.begin();
+    // for (auto i = s21_map_1.begin(); i != s21_map_1.end(); ++i, ++y) {
+    //     // std::cout << (*i).first << " ( " << (*i).second << " )" << " == " << (*y).first << " ( " << (*y).second << " )" << std::endl;
+    //     ASSERT_EQ((*i).first, (*y).first);
+    //     ASSERT_EQ((*i).second, (*y).second);
+    // }
+
+    for (auto &&i : std_map_1)
+    {
+        std::cout << i.first << " " << i.second <<std::endl;
+    }
     
 
 }
