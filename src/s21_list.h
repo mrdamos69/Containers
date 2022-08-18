@@ -6,7 +6,7 @@
 #include <initializer_list>
 #include <utility>
 #include "s21_abstract_class.h"
-#define MAX_SIZE 384307168202282325
+#define MAX_SIZE_LIST 384307168202282325
 
 namespace s21 {
     template<typename T>

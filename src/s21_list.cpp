@@ -243,7 +243,7 @@ void s21_list<T>::splice(const_iterator pos, s21_list& other) {
 
 template<typename T>
 size_t s21_list<T>::max_size() {
-    return MAX_SIZE;
+    return MAX_SIZE_LIST;
 }
 
 template<typename T>

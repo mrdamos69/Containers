@@ -12,12 +12,14 @@
 // #include "s21_queue.cpp"
 #include "s21_set.h"
 // #include "s21_set.cpp"
+#include "s21_map.h"
 #include <list>
 #include <vector>
 #include <array>
 #include <stack>
 #include <queue>
 #include <set>
+#include <map>
 
 using namespace s21;
 using std::cout;
@@ -28,6 +30,7 @@ using std::queue;
 using std::vector;
 using std::array;
 using std::set;
+using std::map;
 
 /**********************/
 /***** ___LIST___ *****/
@@ -1395,6 +1398,17 @@ TEST(Test_s21_set, s21_set_test_max_size) {
     set<char> std_set_1 {10, 5, 15, 3, 7, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, -1, 1, -5, 11};
 
     ASSERT_EQ(s21_set_1.max_size(), s21_set_1.max_size());
+}
+
+/**********************/
+/****** ___MAP___ *****/
+/**********************/
+
+TEST(Test_s21_map, s21_map_test_map_1) {
+    s21_map<int, char> s21_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    // map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, '§'}, {8, '^'}};
+    
+
 }
 
 int main(int argc, char *argv[]) {

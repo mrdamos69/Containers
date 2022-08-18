@@ -9,8 +9,8 @@ s21_set<T>::~s21_set() {
 
 template <typename T>
 s21_set<T>::s21_set(std::initializer_list<value_type> const& items) : m_size(0),
-element(nullptr),
-back_elem(nullptr) {
+                                                                    element(nullptr),
+                                                                    back_elem(nullptr) {
     for (auto&& i : items) {
         this->insert(i);
     }
@@ -18,8 +18,8 @@ back_elem(nullptr) {
 
 template<typename T>
 s21_set<T>::s21_set(s21_set<T>& s) : m_size(0),
-element(nullptr),
-back_elem(nullptr) {
+                                    element(nullptr),
+                                    back_elem(nullptr) {
     this->set_copy(s.element);
 }
 
