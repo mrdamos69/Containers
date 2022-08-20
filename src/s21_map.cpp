@@ -28,7 +28,7 @@ back_elem(nullptr) {
 }
 
 template<typename T, typename T2>
-s21::s21_map<T, T2> s21::s21_map<T, T2>::operator = (s21_map&& m) {
+s21::s21_map<T, T2> s21::s21_map<T, T2>::operator = (s21_map& m) {
     this->clear();
     for (auto&& i : m) {
         this->insert(i);
@@ -38,12 +38,37 @@ s21::s21_map<T, T2> s21::s21_map<T, T2>::operator = (s21_map&& m) {
 
 template<typename T, typename T2>
 T& s21::s21_map<T, T2>::at(const Key_Map<key_type, mapped_type>& key) {
-
+    for (auto i = this->begin(); i != this->end(); ++i) {
+        if ((*i).first == key.data.first) {
+            if ((*i).second == key.data.second) {
+                return i.const_current->data.second;
+            }
+        }
+    }
+    throw std::invalid_argument("MyFunc argument too large.");
 }
 
 template<typename T, typename T2>
-T& s21::s21_map<T, T2>::operator[](const Key_Map<key_type, mapped_type>& key) {
+T2& s21::s21_map<T, T2>::operator[](const Key_Map<key_type, mapped_type>& key) {
+    for (auto i = this->begin(); i != this->end(); ++i) {
+        if ((*i).first == key.data.first) {
+            if ((*i).second == key.data.second) {
+                return i.const_current->data.second;
+            }
+        }
+    }
+    this->insert(key.data);
+    return this->element->data.second;
+}
 
+template<typename T, typename T2>
+T2& s21::s21_map<T, T2>::operator[](const key_type& key) {
+    for (auto i = this->begin(); i != this->end(); ++i) {
+        if ((*i).first == key) {
+           return i.const_current->data.second;
+        }
+    }
+    return this->element->data.second;
 }
 
 template<typename T, typename T2>
@@ -162,16 +187,17 @@ void s21::s21_map<T, T2>::back_to_root() {
     }
 }
 
-//template<typename T, typename T2>
-//std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::insert(Key_Map<key_type, mapped_type>& key, T& obj)
-//{
-//    
-//}
-//
-//template<typename T, typename T2>
-//std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::insert_or_assign(s21::Key_Map<T, T2>& key, T& obj) {
-//
-//}
+template<typename T, typename T2>
+std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::insert(Key_Map<key_type,
+                                                                                    mapped_type>& key, T& obj) {
+    
+}
+
+template<typename T, typename T2>
+std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::insert_or_assign(s21::Key_Map<T,
+                                                                                            T2>& key, T& obj) {
+    
+}
 
 template<typename T, typename T2>
 void s21::s21_map<T, T2>::erase(typename s21::s21_map<T, T2>::iterator pos) {

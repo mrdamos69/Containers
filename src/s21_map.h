@@ -134,6 +134,7 @@ namespace s21 {
             this->operator--();
             return *this;
         }*/
+
         private:
             bool it_end() {
                 T it_end_count = this->const_current->data.first;
@@ -172,10 +173,11 @@ namespace s21 {
         s21_map(const s21_map& m);  // конструктор копирования
         s21_map(s21_map&& m);  // конструктор перемещения
         ~s21_map();  // деструктор
-        s21_map<key_type, mapped_type> operator = (s21_map&& m);
+        s21_map<key_type, mapped_type> operator = (s21_map& m);
 
         T& at(const Key_Map<key_type, mapped_type>& key);  // доступ к указанному элементу с проверкой границ
-        T& operator[](const Key_Map<key_type, mapped_type>& key);  // получить доступ или вставить указанный элемент
+        T2& operator[](const Key_Map<key_type, mapped_type>& key);  // получить доступ или вставить указанный элемент
+        T2& operator[](const key_type& key);
 
         iterator begin();  // возвращает итератор в начало
         iterator end();  // возвращает итератор в конец
