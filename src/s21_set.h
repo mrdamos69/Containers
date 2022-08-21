@@ -201,11 +201,10 @@ namespace s21 {
 
         void set_copy(Key<T>* other);
 
-        void input_in_branch(Key<T>* branch, T value);
+        bool input_in_branch(Key<T>* branch, T value);
 
         void I_ll_be_back();
     };
-
     #include "s21_set.cpp"
 
 }

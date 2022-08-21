@@ -127,8 +127,8 @@ std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::ins
         ++m_size;
     }
     else {
-        input_in_branch(element, value);
-        result.second = true;
+        result.second = input_in_branch(element, value);
+        result.first = this->contains(value);
     }
     I_ll_be_back();
     return result;
@@ -136,7 +136,7 @@ std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::ins
 
 
 template<typename T, typename T2>
-void s21::s21_map<T, T2>::input_in_branch(s21::Key_Map<T, T2>* branch, const typename s21::s21_map<T, T2>::value_type& value) {
+bool s21::s21_map<T, T2>::input_in_branch(s21::Key_Map<T, T2>* branch, const typename s21::s21_map<T, T2>::value_type& value) {
     if (branch->data.first > value.first) {
 
         if (branch->pLeft != back_elem) {
@@ -151,9 +151,9 @@ void s21::s21_map<T, T2>::input_in_branch(s21::Key_Map<T, T2>* branch, const typ
             branch->pRight = back_elem;
             back_elem->pBack = branch;
             ++m_size;
+            return true;
         }
-    }
-    else {
+    } else if (branch->data.first < value.first) {
         if (branch->pRight != back_elem) {
             input_in_branch(branch->pRight, value);
         }
@@ -166,8 +166,10 @@ void s21::s21_map<T, T2>::input_in_branch(s21::Key_Map<T, T2>* branch, const typ
             branch->pRight = back_elem;
             back_elem->pBack = branch;
             ++m_size;
+            return true;
         }
     }
+    return false;
 }
 
 template<typename T, typename T2>
@@ -229,7 +231,7 @@ void s21::s21_map<T, T2>::erase(typename s21::s21_map<T, T2>::iterator pos) {
             }
             else {
                 if (pos.const_current->pRoot == pos.const_current) {
-                    Key<T>* temp_data = pos.const_current;
+                    Key_Map<T, T2>* temp_data = pos.const_current;
                     pos.const_current = pos.const_current->pRight;
                     while (pos.const_current->pLeft != back_elem) {
                         pos.const_current = pos.const_current->pLeft;
@@ -284,6 +286,15 @@ bool s21::s21_map<T, T2>::contains(const key_type& key) {
             return true;
     }
     return false;
+}
+
+template<typename T, typename T2>
+typename s21::s21_map<T, T2>::iterator s21::s21_map<T, T2>::contains(const value_type& key) {
+    for (auto i = this->begin(); i != this->end(); ++i) {
+        if ((*i).first == key.first)
+            return i;
+    }
+    return this->end();
 }
 
 template<typename T, typename T2>

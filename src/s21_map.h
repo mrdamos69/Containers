@@ -32,10 +32,6 @@ namespace s21 {
         bool operator != (const const_iterator_map& right) {
             return !(this->operator==(right));
         }
-        //std::ostream& operator << (std::ostream& os, const const_iterator_map& other) {
-        //    os << other->const_current->data;
-        //    return os;
-        //}
     };
 
     template<typename T, typename T2>
@@ -146,7 +142,6 @@ namespace s21 {
                     temp = temp->pRight;
                 }
                 if (temp->data.first == it_end_count) { return true; }
-
                 return false;
             }
         };
@@ -202,8 +197,9 @@ namespace s21 {
         void merge(s21_map& other);  // соединяет узлы из другого контейнера
 
         bool contains(const key_type& key);  // проверяет, содержит ли контейнер элемент с определенным ключом
+        iterator contains(const value_type& key);
 
-        void input_in_branch(Key_Map<T, T2>* branch, const value_type& value);
+        bool input_in_branch(Key_Map<T, T2>* branch, const value_type& value);
         void I_ll_be_back();
         void back_to_root();
         void set_copy(Key_Map<T, T2>* other);

@@ -1489,9 +1489,9 @@ TEST(Test_s21_map, s21_map_test_merge) {
 
     auto y = std_map_1.begin();
     for (auto i = s21_map_1.begin(); i != s21_map_1.end(); ++i, ++y) {
-        std::cout << (*i).first << " ( " << (*i).second << " )" << " == " << (*y).first << " ( " << (*y).second << " )" << std::endl;
-        // ASSERT_EQ((*i).first, (*y).first);
-        // ASSERT_EQ((*i).second, (*y).second);
+        // std::cout << (*i).first << " ( " << (*i).second << " )" << " == " << (*y).first << " ( " << (*y).second << " )" << std::endl;
+        ASSERT_EQ((*i).first, (*y).first);
+        ASSERT_EQ((*i).second, (*y).second);
     }
 }
 

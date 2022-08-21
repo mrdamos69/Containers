@@ -66,7 +66,8 @@ std::pair<T, bool> s21_set<T>::insert(const value_type& value) {
         back_elem->data = ++m_size;
     }
     else {
-        input_in_branch(element, value);
+        result.second = input_in_branch(element, value);
+        result.first = value;
     }
     I_ll_be_back();
     return result;
@@ -121,8 +122,7 @@ void s21::s21_set<T>::erase(iterator pos) {
                 delete pos.const_current;
                 this->m_size--;
                 break;
-            }
-            else {
+            } else {
                 if (pos.const_current->pRoot == pos.const_current) {
                     Key<T>* temp_data = pos.const_current;
                     pos.const_current = pos.const_current->pRight;
@@ -198,7 +198,7 @@ typename s21::s21_set<T>::iterator s21::s21_set<T>::find(const T key) {
 }
 
 template<typename T>
-void s21::s21_set<T>::input_in_branch(Key<T>* branch, T value) {
+bool s21::s21_set<T>::input_in_branch(Key<T>* branch, T value) {
     if (branch->data > value) {
         if (branch->pLeft != back_elem) {
             input_in_branch(branch->pLeft, value);
@@ -212,9 +212,9 @@ void s21::s21_set<T>::input_in_branch(Key<T>* branch, T value) {
             branch->pRight = back_elem;
             back_elem->pBack = branch;
             back_elem->data = ++m_size;
+            return true;
         }
-    }
-    else {
+    } else if (branch->data < value) {
         if (branch->pRight != back_elem) {
             input_in_branch(branch->pRight, value);
         }
@@ -227,8 +227,10 @@ void s21::s21_set<T>::input_in_branch(Key<T>* branch, T value) {
             branch->pRight = back_elem;
             back_elem->pBack = branch;
             back_elem->data = ++m_size;
+            return true;
         }
     }
+    return false;
 }
 
 template<typename T>
