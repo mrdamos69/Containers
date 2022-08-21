@@ -274,9 +274,10 @@ TEST(Test_s21_list, s21_list_test_get_size_1) {
 }
 
 TEST(Test_s21_list, s21_list_test_max_size_1) {
-    s21_list<int> s21_list_1 {10, 10, 5, 5, 15, 13, 13};
-    list<int> std_list_1 {10, 10, 5, 5, 15, 13, 13};
+    s21_list<char> s21_list_1 {10, 10, 5, 5, 15, 13, 13};
+    list<char> std_list_1 {10, 10, 5, 5, 15, 13, 13};
     ASSERT_EQ(std_list_1.max_size(), s21_list_1.max_size());
+    // cout << "std_list MAX_SIZE: " << std_list_1.max_size() << " " << "s21_list MAX_SIZE: " << s21_list_1.max_size() << endl;
 }
 
 TEST(Test_s21_list, s21_list_test_push_back_1) {
@@ -1509,6 +1510,47 @@ TEST(Test_s21_map, s21_map_test_operator_3) {
     test.data.second = '*';
 
     ASSERT_EQ(s21_map_1[test], std_map_1[7]);
+}
+
+TEST(Test_s21_map, s21_map_test_insert_1) {
+    s21_map<int, char> s21_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+
+    s21_map_1.insert(6, '~');
+    s21_map_1.insert(9, '~');
+    std_map_1.insert(std::make_pair(6, '~'));
+    std_map_1.insert(std::make_pair(9, '~'));
+
+    auto y = std_map_1.begin();
+    for (auto i = s21_map_1.begin(); i != s21_map_1.end(); ++i, ++y) {
+        // std::cout << (*i).first << " ( " << (*i).second << " )" << " == " << (*y).first << " ( " << (*y).second << " )" << std::endl;
+        ASSERT_EQ((*i).first, (*y).first);
+        ASSERT_EQ((*i).second, (*y).second);
+    }
+}
+
+TEST(Test_s21_map, s21_map_test_insert_2) {
+    s21_map<int, char> s21_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+
+    s21_map_1.insert_or_assign(6, '~');
+    s21_map_1.insert_or_assign(9, '~');
+    std_map_1[6] = '~';
+    std_map_1[9] = '~';
+
+    auto y = std_map_1.begin();
+    for (auto i = s21_map_1.begin(); i != s21_map_1.end(); ++i, ++y) {
+        // std::cout << (*i).first << " ( " << (*i).second << " )" << " == " << (*y).first << " ( " << (*y).second << " )" << std::endl;
+        ASSERT_EQ((*i).first, (*y).first);
+        ASSERT_EQ((*i).second, (*y).second);
+    }
+}
+
+TEST(Test_s21_map, s21_map_test_contains) {
+    s21_map<int, char> s21_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+
+    ASSERT_EQ(s21_map_1.contains(4), std_map_1.contains(4));
 }
 
 int main(int argc, char *argv[]) {

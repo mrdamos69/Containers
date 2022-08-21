@@ -188,15 +188,28 @@ void s21::s21_map<T, T2>::back_to_root() {
 }
 
 template<typename T, typename T2>
-std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::insert(Key_Map<key_type,
-                                                                                    mapped_type>& key, T& obj) {
-    
+std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::insert(const key_type& key,
+                                                                                    const mapped_type& obj) {                                                                                                                                                                     
+    for (auto i = this->begin(); i != this->end(); ++i) {
+        if ((*i).first == key) {
+            return std::pair<s21::s21_map<T, T2>::iterator, bool>(i, false);
+        }
+    }
+    this->back_to_root();
+    return this->insert(std::pair<T, T2>(key, obj));
 }
 
 template<typename T, typename T2>
-std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::insert_or_assign(s21::Key_Map<T,
-                                                                                            T2>& key, T& obj) {
-    
+std::pair<typename s21::s21_map<T, T2>::iterator, bool> s21::s21_map<T, T2>::insert_or_assign(const key_type& key,
+                                                                                            const mapped_type& obj) {                                                                                                                                                                
+    for (auto i = this->begin(); i != this->end(); ++i) {
+        if ((*i).first == key) {
+            (*i).second = obj;
+            return std::pair<s21::s21_map<T, T2>::iterator, bool>(i, true);
+        }
+    }
+    this->back_to_root();
+    return this->insert(std::pair<T, T2>(key, obj));                                                
 }
 
 template<typename T, typename T2>
@@ -265,7 +278,11 @@ void s21::s21_map<T, T2>::merge(s21_map& other) {
 }
 
 template<typename T, typename T2>
-bool s21::s21_map<T, T2>::contains(const s21::Key_Map<T, T2>& key) {
+bool s21::s21_map<T, T2>::contains(const key_type& key) {
+    for (auto i = this->begin(); i != this->end(); ++i) {
+        if ((*i).first == key)
+            return true;
+    }
     return false;
 }
 

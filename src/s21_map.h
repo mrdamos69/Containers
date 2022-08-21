@@ -191,17 +191,17 @@ namespace s21 {
         std::pair<iterator, bool> insert(const value_type& value);  // вставляет узел и возвращает итератор туда, где элемент находится
         // в контейнере, и логическое значение, обозначающее, имела ли место вставка
 
-        std::pair<iterator, bool> insert(Key_Map<key_type, mapped_type>& key, T& obj);  // вставляет значение по ключу и возвращает итератор туда,
+        std::pair<iterator, bool> insert(const key_type& key, const mapped_type& obj);  // вставляет значение по ключу и возвращает итератор туда,
         // где элемент находится в контейнере, и логическое значение, обозначающее, имела ли место вставка
 
-        std::pair<iterator, bool> insert_or_assign(Key_Map<key_type, mapped_type>& key, T& obj);  // вставляет элемент или присваивает значение текущему элементу,
+        std::pair<iterator, bool> insert_or_assign(const key_type& key, const mapped_type& obj);  // вставляет элемент или присваивает значение текущему элементу,
         // если ключ уже существует
 
         void erase(iterator pos);  // стирает элемент в позиции
         void swap(s21_map& other);  // меняет содержимое
         void merge(s21_map& other);  // соединяет узлы из другого контейнера
 
-        bool contains(const Key_Map<key_type, mapped_type>& key);  // проверяет, содержит ли контейнер элемент с определенным ключом
+        bool contains(const key_type& key);  // проверяет, содержит ли контейнер элемент с определенным ключом
 
         void input_in_branch(Key_Map<T, T2>* branch, const value_type& value);
         void I_ll_be_back();

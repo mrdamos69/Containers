@@ -2,7 +2,7 @@ OS := $(shell uname -s)
 CC = g++
 FLAG = 
 FLAG_C = -c 
-CL_11 = -std=c++17 -Wall -Wextra
+CL_11 = -std=c++20 -Wall -Wextra
 PR_NAME = S21_containers
 ALL_FILE = s21_list.cpp
 ALL_FILE_O = s21_list.o
@@ -17,11 +17,11 @@ all: clean $(PR_NAME).a test
 # all: clean temp_test
 
 temp_test:
-	@$(CC) s21_list.cpp 
+	@$(CC) s21_list.cpp  
 	@./a.out
 
 $(PR_NAME).a:
-	@$(CC) $(FLAG_C) $(ALL_FILE) 
+	@$(CC) $(FLAG_C) $(ALL_FILE)
 	@ar rcs $(PR_NAME).a $(ALL_FILE_O)
 
 test: $(PR_NAME).a
