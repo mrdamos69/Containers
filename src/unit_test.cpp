@@ -13,6 +13,7 @@
 #include "s21_set.h"
 // #include "s21_set.cpp"
 #include "s21_map.h"
+#include "s21_multiset.h"
 #include <list>
 #include <vector>
 #include <array>
@@ -30,6 +31,7 @@ using std::queue;
 using std::vector;
 using std::array;
 using std::set;
+using std::multiset;
 using std::map;
 
 /**********************/
@@ -1138,9 +1140,6 @@ TEST(Test_s21_set, s21_set_test_set_1) {
         ASSERT_EQ(i, *y);
         y++;
     }
-
-    // s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8};
-    // s21_set_1.print(s21_set_1.get_element());
 }
 
 TEST(Test_s21_set, s21_set_test_iterator_1) {
@@ -1573,6 +1572,144 @@ TEST(Test_s21_map, s21_map_test_erase_1) {
         // ASSERT_EQ((*i).second, (*y).second);
     }
 }
+
+/**********************/
+/****** _MULTISET_ ****/
+/**********************/
+
+TEST(Test_s21_multiset, s21_map_test_multiset_1) {
+    s21_multiset<int> s21_multiset_1 {5, 3, 3, 7, 2, 4, 6, 8, 6};
+    multiset<int> std_multiset_1 {5, 3, 3, 7, 2, 4, 6, 8, 6};
+    
+    auto x = std_multiset_1.begin();
+    for (auto &i : s21_multiset_1) {
+        // cout << "s21_multiset: " << i << " == " << *x << endl;
+        ASSERT_EQ(i, *x);
+        x++;
+    }
+
+    auto y = s21_multiset_1.begin();
+    for (auto &i : std_multiset_1) {
+        // cout << "s21_multiset: " << *y << endl;
+        ASSERT_EQ(i, *y);
+        y++;
+    }
+}
+
+TEST(Test_s21_multiset, s21_multiset_test_iterator_1) {
+    s21_multiset<int> s21_multiset_1 {10, 5, 15, 3, 7, 3, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, 12, -1, 1, -5, 11};
+    multiset<int> std_multiset_1 {10, 5, 15, 3, 7, 3, 13, 17, 6, 8, 2, 4, 16, 18, 12, 14, 12, -1, 1, -5, 11};
+
+    auto i = s21_multiset_1.end();
+    for (auto y = std_multiset_1.end(); y != std_multiset_1.begin(); y--) {
+        // ASSERT_EQ(*i, *y);
+        cout << "s21_set: " << *y << " == " << *i << endl;
+        i--;
+    }
+}
+
+TEST(Test_s21_multiset, s21_multiset_test_operator) {
+    s21_multiset<int> s21_multiset_1 {5, 3, 3, 7, 2, 4, 6, 8, 6};
+    s21_multiset<int> s21_multiset_2 {10, 6, 12, 3, 13, 2, 2, -4, 1, 18};
+    s21_multiset_1 = s21_multiset_2;
+
+    multiset<int> std_multiset_1 {5, 3, 3, 7, 2, 4, 6, 8, 6};
+    multiset<int> std_multiset_2 {10, 6, 12, 3, 13, 2, 2, -4, 1, 18};
+    std_multiset_1 = std_multiset_2;
+
+
+    auto x = std_multiset_1.begin();
+    for (auto &i : s21_multiset_1) {
+        // cout << "s21_multiset: " << i << endl;
+        ASSERT_EQ(i, *x);
+        x++;
+    }
+}
+
+TEST(Test_s21_multiset, s21_multiset_test_constructor) {
+    s21_multiset<int> s21_multiset_1 {5, 3, 3, 7, 2, 4, 6, 8, 6};
+    s21_multiset<int> s21_multiset_2(s21_multiset_1);
+
+    multiset<int> std_multiset_1 {5, 3, 3, 7, 2, 4, 6, 8, 6};
+    multiset<int> std_multiset_2(std_multiset_1);
+    
+
+    auto x = s21_multiset_2.begin();
+    for (auto &i : std_multiset_2) {
+        // cout << "s21_multiset: " << *x << " " << i << endl;
+        ASSERT_EQ(i, *x);
+        x++;
+    }
+}
+
+// TEST(Test_s21_set, s21_set_test_swap) {
+//     s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8};
+//     s21_set<int> s21_set_2 {10, 6, 12, 3, 13, 2, -4, 1, 18};
+//     s21_set_1.swap(s21_set_2);
+
+//     set<int> std_set_1 {5, 3, 7, 2, 4, 6, 8};
+//     set<int> std_set_2 {10, 6, 12, 3, 13, 2, -4, 1, 18};
+//     std_set_1.swap(std_set_2);
+
+
+//     auto x = std_set_1.begin();
+//     for (auto &i : s21_set_1) {
+//         // cout << "s21_set: " << i << endl;
+//         ASSERT_EQ(i, *x);
+//         x++;
+//     }
+// }
+
+// TEST(Test_s21_set, s21_set_test_merge) {
+//     s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8}; // убрал 3
+//     s21_set<int> s21_set_2 {10, 6, 12, 13, 2, -4, 1, 18};
+//     s21_set_1.merge(s21_set_2);
+
+//     set<int> std_set_1 {5, 3, 7, 2, 4, 6, 8};  // убрал 3 
+//     set<int> std_set_2 {10, 6, 12, 13, 2, -4, 1, 18};
+//     std_set_1.merge(std_set_2);
+
+//     auto x = std_set_1.begin();
+//     for (auto &i : s21_set_1) {
+//         // cout << "s21_set: " << i << endl;
+//         ASSERT_EQ(i, *x);
+//         x++;
+//     }
+
+//     auto y = s21_set_1.begin();
+//     for (auto &i : std_set_1) {
+//         // cout << "s21_set: " << *y << " " << i << endl;
+//         ASSERT_EQ(i, *y);
+//         y++;
+//     }
+// }
+
+// TEST(Test_s21_set, s21_set_test_contains) {
+//     Key<int> test;
+//     test.data = 6;
+//     s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8};
+//     s21_set_1.contains(test);
+//     ASSERT_TRUE(s21_set_1.contains(test));
+// }
+
+// TEST(Test_s21_set, s21_set_test_find_int) {
+//     s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8};
+//     s21_set_1.find(6);
+
+//     set<int> std_set_1 {5, 3, 7, 2, 4, 6, 8};
+//     std_set_1.find(6);
+
+//     ASSERT_EQ(*(s21_set_1.find(6)), *(s21_set_1.find(6)));
+// }
+
+// TEST(Test_s21_set, s21_set_test_find_iterator) {
+//     Key<int> test;
+//     test.data = 4;
+//     s21_set<int> s21_set_1 {5, 3, 7, 2, 4, 6, 8};
+//     s21_set_1.find(test);
+
+//     ASSERT_EQ(4, *(s21_set_1.find(test)));
+// }
 
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);

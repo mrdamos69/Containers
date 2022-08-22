@@ -45,7 +45,7 @@ namespace s21 {
 
     template<typename T>
     class s21_set {
-    private:
+    protected:
         size_t m_size;  // количество элементов в set
         Key<T>* element;
         Key<T>* back_elem;
@@ -97,9 +97,9 @@ namespace s21 {
 
         Key<T>* get_element();
 
-        void set_copy(Key<T>* other);
+        virtual void set_copy(Key<T>* other);
 
-        bool input_in_branch(Key<T>* branch, T value);
+        virtual bool input_in_branch(Key<T>* branch, T value);
 
         void I_ll_be_back();
     };
