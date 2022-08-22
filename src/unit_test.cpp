@@ -1553,6 +1553,27 @@ TEST(Test_s21_map, s21_map_test_contains) {
     ASSERT_EQ(s21_map_1.contains(4), std_map_1.contains(4));
 }
 
+TEST(Test_s21_map, s21_map_test_erase_1) {
+    s21_map<int, char> s21_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+    map<int, char> std_map_1 {{5, '@'}, {3, '#'}, {7, '*'}, {2, '+'}, {4, '&'}, {6, ')'}, {8, '^'}};
+
+    auto x = s21_map_1.end();
+    auto j = std_map_1.end();
+    for (size_t i = 0; i < 4; i++) {
+        --x; --j;
+    }
+    s21_map_1.erase(x);
+    std_map_1.erase(j);
+
+
+    auto y = std_map_1.begin();
+    for (auto i = s21_map_1.begin(); i != s21_map_1.end(); ++i, ++y) {
+        // std::cout << (*i).first << " ( " << (*i).second << " )" << " == " << (*y).first << " ( " << (*y).second << " )" << std::endl;
+        // ASSERT_EQ((*i).first, (*y).first);
+        // ASSERT_EQ((*i).second, (*y).second);
+    }
+}
+
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

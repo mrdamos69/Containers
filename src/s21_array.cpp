@@ -62,7 +62,7 @@ const T& s21_array<T, SIZE>::front() {
 
 template <typename T, size_t SIZE>
 const T& s21_array<T, SIZE>::back() {
-    return this->arr[m_size - 1];
+    return this->arr[this->m_size - 1];
 }
 
 template <typename T, size_t SIZE>
@@ -95,8 +95,6 @@ void s21_array<T, SIZE>::swap(s21_array& other) {
     s21_array<T, SIZE> temp(*this);
     *this = other;
     other = temp;
-    // other.m_size-=1;
-    // this->m_size-=1;
 }
 
 template <typename T, size_t SIZE>

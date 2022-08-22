@@ -26,12 +26,8 @@ namespace s21 {
         const_iterator_map() : const_current(0) {}
         const_iterator_map(Key_Map<T, T2>* curr) : const_current(curr) {}
         std::pair<T, T2>& operator *() { return const_current->data; }
-        bool operator == (const const_iterator_map& right) {
-            return this->const_current == right.const_current;
-        }
-        bool operator != (const const_iterator_map& right) {
-            return !(this->operator==(right));
-        }
+        bool operator == (const const_iterator_map& right);
+        bool operator != (const const_iterator_map& right);
     };
 
     template<typename T, typename T2>
@@ -39,112 +35,11 @@ namespace s21 {
     public:
         iterator_map() : const_iterator_map<T, T2>() {}
         iterator_map(Key_Map<T, T2>* curr) : const_iterator_map<T, T2>(curr) {}
-
-        iterator_map& operator ++ () {
-            if (it_end()) {
-                this->const_current = this->const_current->pRight;
-                return *this;
-            }
-
-            if (this->const_current->pRoot == this->const_current) {
-                this->const_current = this->const_current->pRight;
-                while (this->const_current->pLeft->pLeft != nullptr) {
-                    this->const_current = this->const_current->pLeft;
-                }
-                return *this;
-            }
-
-            if (this->const_current->data.first < this->const_current->pRight->data.first && this->const_current->pRight->pRight) {
-                this->const_current = this->const_current->pRight;
-
-                while (this->const_current->pLeft->pLeft != nullptr) {
-                    this->const_current = this->const_current->pLeft;
-                }
-                return *this;
-            }
-
-            T temp = this->const_current->data.first;
-            this->const_current = this->const_current->pBack;
-
-            if (temp == this->const_current->pLeft->data.first) {
-                return *this;
-            }
-            else if (temp == this->const_current->pRight->data.first) {
-                this->const_current = this->const_current->pBack;
-                if (this->const_current->pRight->pRight && temp == this->const_current->pRight->pRight->data.first) {
-                    this->const_current = this->const_current->pBack;
-                }
-                return *this;
-            }
-            return *this;
-        }
-
-        //iterator_set& operator ++ (int) {
-        //    this->operator++();
-        //    return *this;
-        //}
-
-        iterator_map& operator -- () {
-            if (this->const_current->pRoot == this->const_current) {
-                this->const_current = this->const_current->pLeft;
-                while (this->const_current->pLeft->pRight != nullptr) {
-                    this->const_current = this->const_current->pRight;
-                }
-                return *this;
-            }
-
-            if (!this->const_current->pLeft && !this->const_current->pRight) {
-                this->const_current = this->const_current->pBack;
-                return *this;
-            }
-
-            if (this->const_current->pLeft->data.first < this->const_current->data.first && this->const_current->pLeft->pLeft != nullptr) {
-                this->const_current = this->const_current->pLeft;
-                while (this->const_current->pRight->pRight != nullptr) {
-                    this->const_current = this->const_current->pRight;
-                }
-                return *this;
-            }
-
-            T temp = this->const_current->data.first;
-            this->const_current = this->const_current->pBack;
-
-            if (temp == this->const_current->pRight->data.first && this->const_current->pRight != nullptr) {
-                return *this;
-            }
-
-            if (temp == this->const_current->pLeft->data.first) {
-                this->const_current = this->const_current->pBack;
-                if (this->const_current->pLeft->pLeft && temp == this->const_current->pLeft->pLeft->data.first) {
-                    while (this->const_current->pBack != nullptr) {
-                        this->const_current = this->const_current->pBack;
-                    }
-                }
-                return *this;
-            }
-
-            return *this;
-        }
-
-        /*iterator_set& operator -- (int) {
-            this->operator--();
-            return *this;
-        }*/
-
-        private:
-            bool it_end() {
-                T it_end_count = this->const_current->data.first;
-                Key_Map<T, T2>* temp = this->const_current;
-                while (temp->pBack != nullptr) {
-                    temp = temp->pBack;
-                }
-                while (temp->pRight->pRight != nullptr) {
-                    temp = temp->pRight;
-                }
-                if (temp->data.first == it_end_count) { return true; }
-                return false;
-            }
-        };
+        iterator_map& operator ++ ();
+        iterator_map& operator -- ();
+    private:
+            bool it_end();
+    };
 
     template<typename T, typename T2>
     class s21_map {
@@ -182,6 +77,7 @@ namespace s21 {
         size_type max_size();  // возвращает максимально возможное количество элементов
 
         void clear();  // очищает содержимое
+        void clear(Key_Map<key_type, mapped_type>* key);
 
         std::pair<iterator, bool> insert(const value_type& value);  // вставляет узел и возвращает итератор туда, где элемент находится
         // в контейнере, и логическое значение, обозначающее, имела ли место вставка

@@ -45,13 +45,13 @@ namespace s21 {
             iterator data();  // прямой доступ к базовому массиву
 
             iterator begin() {return this->arr;} // возвращает итератор в начало
-            iterator end() {return this->arr + (m_size);}  // возвращает итератор в конец
+            iterator end() {return this->arr + m_size;}  // возвращает итератор в конец
 
             bool empty();  // проверяет, пуст ли контейнер
             size_type get_size();  // возвращает количество элементов
             size_t max_size();  // возвращает максимально возможное количество элементов
 
-            /**/void clear();  // очищает содержимое
+            void clear();  // очищает содержимое
             void swap(s21_array& other);  // меняет содержимое
             void fill(const_reference value);  // присваивает заданное значение value всем элементам в контейнере
     };

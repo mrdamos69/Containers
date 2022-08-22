@@ -3,6 +3,126 @@
 using namespace s21;
 
 template<typename T>
+bool  s21::const_iterator_set<T>::operator == (const const_iterator_set& right) {
+    return this->const_current == right.const_current;
+}
+
+template<typename T>
+bool s21::const_iterator_set<T>::operator != (const const_iterator_set& right) {
+    return !(this->operator==(right));
+}
+
+template<typename T>
+s21::iterator_set<T>& s21::iterator_set<T>::operator ++ () {
+    if (it_end()) {
+        this->const_current = this->const_current->pRight;
+        return *this;
+    }
+
+    if (this->const_current->pRoot == this->const_current) {
+        this->const_current = this->const_current->pRight;
+        while (this->const_current->pLeft->pLeft != nullptr) {
+            this->const_current = this->const_current->pLeft;
+        }
+        return *this;
+    }
+
+    if (this->const_current->data < this->const_current->pRight->data && this->const_current->pRight->pRight) {
+        this->const_current = this->const_current->pRight;
+
+        while (this->const_current->pLeft->pLeft != nullptr) {
+            this->const_current = this->const_current->pLeft;
+        }
+        return *this;
+    }
+
+    T temp = this->const_current->data;
+    this->const_current = this->const_current->pBack;
+
+    if (temp == this->const_current->pLeft->data) {
+        return *this;
+    }
+    else if (temp == this->const_current->pRight->data) {
+        this->const_current = this->const_current->pBack; // <===
+        if (this->const_current->pRight->pRight && temp == this->const_current->pRight->pRight->data) {
+            this->const_current = this->const_current->pBack;
+        }
+        return *this;
+    }
+    return *this;
+}
+
+template<typename T>
+s21::iterator_set<T>& s21::iterator_set<T>::operator -- () {
+    if (this->const_current->pRoot == this->const_current) {
+        this->const_current = this->const_current->pLeft;
+        while (this->const_current->pLeft->pRight != nullptr) {
+            this->const_current = this->const_current->pRight;
+        }
+        return *this;
+    }
+
+    if (!this->const_current->pLeft && !this->const_current->pRight) {
+        this->const_current = this->const_current->pBack;
+        return *this;
+    }
+
+    if (this->const_current->pLeft->data < this->const_current->data && this->const_current->pLeft->pLeft != nullptr) {
+        this->const_current = this->const_current->pLeft;
+        while (this->const_current->pRight->pRight != nullptr) {
+            this->const_current = this->const_current->pRight;
+        }
+        return *this;
+    }
+
+    T temp = this->const_current->data;
+    this->const_current = this->const_current->pBack;
+
+    if (temp == this->const_current->pRight->data && this->const_current->pRight != nullptr) {
+        return *this;
+    }
+
+    if (temp == this->const_current->pLeft->data) {
+        this->const_current = this->const_current->pBack;
+        if (this->const_current->pLeft->pLeft && temp == this->const_current->pLeft->pLeft->data) {
+            while (this->const_current->pBack != nullptr) {
+                this->const_current = this->const_current->pBack;
+            }
+        }
+        return *this;
+    }
+
+    return *this;
+}
+
+template<typename T>
+s21::iterator_set<T>& s21::iterator_set<T>::operator ++ (int) {
+    this->operator++();
+    return *this;
+}
+
+template<typename T>
+s21::iterator_set<T>& s21::iterator_set<T>::operator -- (int) {
+    this->operator--();
+    return *this;
+}
+
+template<typename T>
+bool s21::iterator_set<T>::it_end() {
+    T it_end_count = this->const_current->data;
+    Key<T>* temp = this->const_current;
+    while (temp->pBack != nullptr) {
+        temp = temp->pBack;
+    }
+    while (temp->pRight->pRight != nullptr) {
+        temp = temp->pRight;
+    }
+    if (temp->data == it_end_count) { return true; }
+    
+    return false;
+}
+
+template<typename T>
 s21_set<T>::~s21_set() {
     this->clear();
 }
@@ -83,17 +203,17 @@ bool s21_set<T>::contains(const Key<T>& key) {
 
 template<typename T>
 void s21_set<T>::clear() {
-    if (element->pLeft != nullptr) {
-        this->element = this->element->pLeft;
-        this->clear();
-        delete element;
+    this->clear(element);
+}
+
+template<typename T>
+void s21::s21_set<T>::clear(Key<T>* key) {
+    if (key ->pLeft && key->pRight) {
+        this->clear(key->pLeft);
+        this->clear(key->pRight);
+        delete key;
+        element = nullptr;
     }
-    else if (element->pRight != nullptr) {
-        this->element = this->element->pRight;
-        this->clear();
-        delete element;
-    }
-    element = nullptr;
 }
 
 template<typename T>
@@ -145,7 +265,7 @@ void s21::s21_set<T>::erase(iterator pos) {
                     }
                     
                     pos.const_current->pBack = nullptr;
-
+                    
                     set_copy(pos.const_current->pLeft);
                     set_copy(pos.const_current->pRight);
                     /*******************************/
@@ -153,6 +273,8 @@ void s21::s21_set<T>::erase(iterator pos) {
                     // delete pos.const_current->pRight;
                     delete pos.const_current;
                     /*******************************/
+                    // this->clear(i.const_current);
+                    
                     break;
                 }
             }

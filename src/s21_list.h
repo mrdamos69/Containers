@@ -29,17 +29,8 @@ namespace s21 {
         const_iterator_cl() : const_current(0) {}
         const_iterator_cl(Node<T>* curr) : const_current(curr) {}
         T& operator *() {return const_current->data;}
-
-        bool operator == (const const_iterator_cl &right) {
-            return (this->const_current->data == right.const_current->data);
-        }
-
-        bool operator != (const const_iterator_cl &right) {
-            return !(this->const_current->data == right.const_current->data);
-        }
-
-    // protected:
-        // Node<T>* const_current;
+        bool operator == (const const_iterator_cl &right);
+        bool operator != (const const_iterator_cl &right);
     };
 
     template<typename T>
@@ -48,30 +39,12 @@ namespace s21 {
         iterator_cl() : const_iterator_cl<T>() {}
         iterator_cl(Node<T>* curr) : const_iterator_cl<T>(curr) {}
 
-        iterator_cl& operator ++ () {
-            if (this->const_current->pNext != nullptr)
-                this->const_current = this->const_current->pNext;
-            return *this;
-        }
-        
-        iterator_cl& operator ++ (int) {
-            // iterator_cl<T> temp(*this);
-            this->operator++();
-            // return temp;
-            return *this;
-        }
+        iterator_cl& operator ++ ();
+        iterator_cl& operator ++ (int);
+        iterator_cl& operator -- ();
+        iterator_cl& operator -- (int);
 
-        iterator_cl& operator -- () {
-            if (this->const_current->pBack != nullptr)
-                this->const_current = this->const_current->pBack;
-            return *this;
-        }
-        iterator_cl& operator -- (int) {
-            // iterator_cl<T> temp(*this);
-            this->operator--();
-            // return temp;
-            return *this;
-        }
+        void set_current(Node<T>* other);
     };
 
     template<typename T>

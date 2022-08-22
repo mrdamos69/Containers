@@ -1,4 +1,109 @@
 #include "s21_map.h"
+template<typename T, typename T2>
+bool s21::const_iterator_map<T, T2>::operator == (const const_iterator_map& right) {
+    return this->const_current == right.const_current;
+}
+
+template<typename T, typename T2>
+bool s21::const_iterator_map<T, T2>::operator != (const const_iterator_map& right) {
+    return !(this->operator==(right));
+}
+
+template<typename T, typename T2>
+s21::iterator_map<T, T2>& s21::iterator_map<T, T2>::operator ++ () {
+    if (it_end()) {
+        this->const_current = this->const_current->pRight;
+        return *this;
+    }
+
+    if (this->const_current->pRoot == this->const_current) {
+        this->const_current = this->const_current->pRight;
+        while (this->const_current->pLeft->pLeft != nullptr) {
+            this->const_current = this->const_current->pLeft;
+        }
+        return *this;
+    }
+
+    if (this->const_current->data.first < this->const_current->pRight->data.first && this->const_current->pRight->pRight) {
+        this->const_current = this->const_current->pRight;
+
+        while (this->const_current->pLeft->pLeft != nullptr) {
+            this->const_current = this->const_current->pLeft;
+        }
+        return *this;
+    }
+
+    T temp = this->const_current->data.first;
+    this->const_current = this->const_current->pBack;
+
+    if (temp == this->const_current->pLeft->data.first) {
+        return *this;
+    }
+    else if (temp == this->const_current->pRight->data.first) {
+        this->const_current = this->const_current->pBack;
+        if (this->const_current->pRight->pRight && temp == this->const_current->pRight->pRight->data.first) {
+            this->const_current = this->const_current->pBack;
+        }
+        return *this;
+    }
+    return *this;
+}
+
+template<typename T, typename T2>
+s21::iterator_map<T, T2>& s21::iterator_map<T, T2>::operator -- () {
+    if (this->const_current->pRoot == this->const_current) {
+        this->const_current = this->const_current->pLeft;
+        while (this->const_current->pLeft->pRight != nullptr) {
+            this->const_current = this->const_current->pRight;
+        }
+        return *this;
+    }
+
+    if (!this->const_current->pLeft && !this->const_current->pRight) {
+        this->const_current = this->const_current->pBack;
+        return *this;
+    }
+
+    if (this->const_current->pLeft->data.first < this->const_current->data.first && this->const_current->pLeft->pLeft != nullptr) {
+        this->const_current = this->const_current->pLeft;
+        while (this->const_current->pRight->pRight != nullptr) {
+            this->const_current = this->const_current->pRight;
+        }
+        return *this;
+    }
+
+    T temp = this->const_current->data.first;
+    this->const_current = this->const_current->pBack;
+
+    if (temp == this->const_current->pRight->data.first && this->const_current->pRight != nullptr) {
+        return *this;
+    }
+
+    if (temp == this->const_current->pLeft->data.first) {
+        this->const_current = this->const_current->pBack;
+        if (this->const_current->pLeft->pLeft && temp == this->const_current->pLeft->pLeft->data.first) {
+            while (this->const_current->pBack != nullptr) {
+                this->const_current = this->const_current->pBack;
+            }
+        }
+        return *this;
+    }
+    return *this;
+}
+
+template<typename T, typename T2>
+bool s21::iterator_map<T, T2>::it_end() {
+    T it_end_count = this->const_current->data.first;
+    Key_Map<T, T2>* temp = this->const_current;
+    while (temp->pBack != nullptr) {
+        temp = temp->pBack;
+    }
+    while (temp->pRight->pRight != nullptr) {
+        temp = temp->pRight;
+    }
+    if (temp->data.first == it_end_count) { return true; }
+    return false;
+}
 
 template<typename T, typename T2>
 s21::s21_map<T, T2>::~s21_map() {
@@ -73,17 +178,19 @@ T2& s21::s21_map<T, T2>::operator[](const key_type& key) {
 
 template<typename T, typename T2>
 void s21::s21_map<T, T2>::clear() {
-    if (element->pLeft != nullptr) {
-        this->element = this->element->pLeft;
-        this->clear();
-        delete element;
+    clear(this->element);
+    this->m_size = 0;
+}
+
+template<typename T, typename T2>
+void s21::s21_map<T, T2>::clear(Key_Map<key_type, mapped_type>* key) {
+    if (key ->pLeft && key->pRight) {
+        this->clear(key->pLeft);
+        this->clear(key->pRight);
+        delete key;
+        m_size--;
+        element = nullptr;
     }
-    else if (element->pRight != nullptr) {
-        this->element = this->element->pRight;
-        this->clear();
-        delete element;
-    }
-    element = nullptr;
 }
 
 template<typename T, typename T2>
@@ -255,11 +362,7 @@ void s21::s21_map<T, T2>::erase(typename s21::s21_map<T, T2>::iterator pos) {
 
                     set_copy(pos.const_current->pLeft);
                     set_copy(pos.const_current->pRight);
-                    /*******************************/
-                    delete pos.const_current->pLeft;
-                    // delete pos.const_current->pRight;
-                    delete pos.const_current;
-                    /*******************************/
+                    this->clear(pos.const_current);
                     break;
                 }
             }
