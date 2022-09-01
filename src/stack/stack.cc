@@ -1,17 +1,13 @@
-#include "s21_stack.h"
-using namespace s21;
+#include "stack.h"
 
 template<typename T>
-s21::s21_stack<T>::s21_stack(std::initializer_list<value_type> const &items) {
-    this->m_size = 0;
-    this->head = nullptr;
-    for (auto &i : items) {
+s21::s21_stack<T>::s21_stack(std::initializer_list<value_type> const &items) : s21_stack() {
+    for (auto &i : items)
         this->push(i);
-    }
 }
 
 template<typename T>
-s21::s21_stack<T>::s21_stack(const s21_stack& s) : m_size(0), head(nullptr) {
+s21::s21_stack<T>::s21_stack(const s21_stack& s) : s21_stack() {
     Node<value_type>* current =  s.head;
     while (current != nullptr) {
         this->push(current->data);
@@ -30,8 +26,8 @@ s21::s21_stack<T>::~s21_stack() {
 }
 
 template<typename T>
-s21::s21_stack<T>&  s21::s21_stack<T>::operator = (s21_stack &s) {
-    if (head) {
+s21::s21_stack<T>&  s21::s21_stack<T>::operator = (const s21_stack &s) {
+    if (this->head) {
         this->clear();
     }
     Node<value_type>* current = s.head;
@@ -48,19 +44,9 @@ const T& s21::s21_stack<T>::top() {
 }
 
 template<typename T>
-bool s21::s21_stack<T>::empty() {
-    return !(this->m_size > 0);
-}
-
-template<typename T>
-size_t s21::s21_stack<T>::get_size() {
-    return this->m_size;
-}
-
-template<typename T>
 void s21::s21_stack<T>::push(value_type data) {
-    head = new Node<value_type>(data, head);
-    m_size++;
+    this->head = new Node<value_type>(data, this->head);
+    (this->m_size)++;
 }
 
 template<typename T>
@@ -68,7 +54,7 @@ void s21::s21_stack<T>::pop() {
     Node<value_type>* current = this->head;
     this->head = this->head->pNext;
     delete current;
-    m_size--;
+    (this->m_size)--;
 }
 
 template<typename T>
@@ -81,8 +67,8 @@ void s21::s21_stack<T>::swap(s21_stack& other) {
 
 template<typename T>
 void s21::s21_stack<T>::push_back(value_type data) {
-    if (head == nullptr) {
-        head = new Node<value_type>(data);
+    if (this->head == nullptr) {
+        this->head = new Node<value_type>(data);
     } else {
         Node<value_type>* current = this->head;
         while (current->pNext != nullptr) {
@@ -90,7 +76,7 @@ void s21::s21_stack<T>::push_back(value_type data) {
         }
         current->pNext = new Node<value_type>(data);
     }
-    m_size++;
+    (this->m_size)++;
 }
 
 template<typename T>
@@ -106,7 +92,19 @@ void s21::s21_stack<T>::reverse() {
 
 template<typename T>
 void s21::s21_stack<T>::clear() {
-    while (m_size) {
+    while (this->m_size) {
         this->pop();
     }
+}
+
+template<typename T>
+size_t s21::s21_stack<T>::max_size() {
+    return MAX_SIZE_STECK;
+}
+
+template<typename T>
+template<typename ... Arg>
+void s21::s21_stack<T>::emplace_front(T value, Arg&&...args) {
+    this->push(value);
+    this->emplace_front(args...);
 }

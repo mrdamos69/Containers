@@ -1,18 +1,15 @@
-#include "s21_queue.h"
-using namespace s21;
+#include "queue.h"
 
 template<typename T>
-s21::s21_queue<T>::s21_queue(std::initializer_list<value_type> const &items) {
-    this->m_size = 0;
-    this->head = nullptr;
+s21::s21_queue<T>::s21_queue(std::initializer_list<value_type> const &items) : s21_queue() {
     for (auto &i : items) {
         this->push(i);
     }
 }
 
 template<typename T>
-s21::s21_queue<T>::s21_queue(const s21_queue& s) : m_size(0), head(nullptr) {
-    Node<value_type>* current =  s.head;
+s21::s21_queue<T>::s21_queue(const s21_queue& q) : s21_queue() {
+    Node<value_type>* current =  q.head;
     while (current != nullptr) {
         this->push(current->data);
         current = current->pNext;
@@ -20,8 +17,8 @@ s21::s21_queue<T>::s21_queue(const s21_queue& s) : m_size(0), head(nullptr) {
 }
 
 template<typename T>
-s21::s21_queue<T>::s21_queue(s21_queue &&s) : s21::s21_queue<T>(s) {
-    s.clear();
+s21::s21_queue<T>::s21_queue(s21_queue &&q) : s21::s21_queue<T>(q) {
+    q.clear();
 }
 
 template<typename T>
@@ -30,11 +27,11 @@ s21::s21_queue<T>::~s21_queue() {
 }
 
 template<typename T>
-s21::s21_queue<T>&  s21::s21_queue<T>::operator = (s21_queue &s) {
-    if (head) {
+s21::s21_queue<T>&  s21::s21_queue<T>::operator = (const s21_queue &q) {
+    if (this->head) {
         this->clear();
     }
-    Node<value_type>* current = s.head;
+    Node<value_type>* current = q.head;
     while (current != nullptr) {
         this->push(current->data);
         current = current->pNext;
@@ -49,7 +46,7 @@ const T& s21::s21_queue<T>::front() {
 
 template<typename T>
 const T& s21::s21_queue<T>::back() {
-    if (head == nullptr) {
+    if (this->head == nullptr) {
         return this->head->data;
     } else {
         Node<value_type>* current = this->head;
@@ -60,21 +57,10 @@ const T& s21::s21_queue<T>::back() {
     }
 }
 
-
-template<typename T>
-bool s21::s21_queue<T>::empty() {
-    return !(this->m_size > 0);
-}
-
-template<typename T>
-size_t s21::s21_queue<T>::get_size() {
-    return this->m_size;
-}
-
 template<typename T>
 void s21::s21_queue<T>::push(value_type data) {
-    if (head == nullptr) {
-        head = new Node<value_type>(data);
+    if (this->head == nullptr) {
+        this->head = new Node<value_type>(data);
     } else {
         Node<value_type>* current = this->head;
         while (current->pNext != nullptr) {
@@ -82,7 +68,7 @@ void s21::s21_queue<T>::push(value_type data) {
         }
         current->pNext = new Node<value_type>(data);
     }
-    m_size++;
+    (this->m_size)++;
 }
 
 template<typename T>
@@ -90,7 +76,7 @@ void s21::s21_queue<T>::pop() {
     Node<value_type>* current = this->head;
     this->head = this->head->pNext;
     delete current;
-    m_size--;
+    (this->m_size)--;
 }
 
 template<typename T>
@@ -103,8 +89,8 @@ void s21::s21_queue<T>::swap(s21_queue& other) {
 
 template<typename T>
 void s21::s21_queue<T>::push_front(value_type data) {
-    head = new Node<value_type>(data, head);
-    m_size++;
+    this->head = new Node<value_type>(data, this->head);
+    (this->m_size)++;
 }
 
 template<typename T>
@@ -120,7 +106,19 @@ void s21::s21_queue<T>::reverse() {
 
 template<typename T>
 void s21::s21_queue<T>::clear() {
-    while (m_size) {
+    while (this->m_size) {
         this->pop();
     }
+}
+
+template<typename T>
+size_t s21::s21_queue<T>::max_size() {
+    return MAX_SIZE_QUEUE;
+}
+
+template<typename T>
+template<typename ... Arg>
+void s21::s21_queue<T>::emplace_back(T value, Arg&&...args) {
+    this->push(value);
+    this->emplace_back(args...);
 }
