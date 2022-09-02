@@ -1,9 +1,17 @@
-#pragma once
-#include "s21_list.h"
-#include "s21_vector.h"
-#include "s21_array.h"
-#include "s21_stack.h"
-#include "s21_queue.h"
-#include "s21_set.h"
-#include "s21_map.h"
-#include "s21_multiset.h"
+#ifndef SRC_S21_CONTAINERS_H_
+#define SRC_S21_CONTAINERS_H_
+
+#include "list/list.cc"
+#include "list/list.h"
+#include "map/map.cc"
+#include "map/map.h"
+#include "queue/queue.cc"
+#include "queue/queue.h"
+#include "set/set.cc"
+#include "set/set.h"
+#include "stack/stack.cc"
+#include "stack/stack.h"
+#include "vector/vector.cc"
+#include "vector/vector.h"
+
+#endif  //  SRC_S21_CONTAINERS_H_

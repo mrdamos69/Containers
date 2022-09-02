@@ -1,55 +1,92 @@
-OS := $(shell uname -s)
-CC = g++
-FLAG = 
-FLAG_C = -c 
-CL_11 = -std=c++20 -Wall -Wextra
-PR_NAME = S21_containers
-ALL_FILE = s21_list.cpp
-ALL_FILE_O = s21_list.o
+CC := gcc
+CFLAGS := -ggdb -std=c++20 -Wall -Werror -Wextra -lstdc++
+C_LIBS :=
+TST_LIBS := -lgtest -lgmock -pthread
 
-ifeq ($(OS), Darwin)
-	FLAGS_PLATFORM = -lgtest
-else
-	FLAGS_PLATFORM = -lgtest -lsubunit -lrt -lm -lpthread -g
-endif
+all: rebuild
 
-all: clean $(PR_NAME).a test
-# all: clean temp_test
+build:
 
-temp_test:
-	@$(CC) s21_list.cpp  
-	@./a.out
+rebuild: clean build
 
-$(PR_NAME).a:
-	@$(CC) $(FLAG_C) $(ALL_FILE)
-	@ar rcs $(PR_NAME).a $(ALL_FILE_O)
+s21_array.o: array/array.cc array/array.h
+	@$(CC) -c array/array.cc -o s21_array.o $(C_LIBS) $(CFLAGS) -DUSE_EXPORT
 
-test: $(PR_NAME).a
-	@$(CC) $(CL_11) unit_test.cpp $(PR_NAME).a -o tests.o -lgtest
-	@./tests.o
+s21_list.o: list/list.cc list/list.h
+	@$(CC) -c list/list.cc -o s21_list.o $(C_LIBS) $(CFLAGS) -DUSE_EXPORT
 
-gcov_report:
-	@$(CC) --coverage $(ALL_FILE) unit_test.cpp $(FLAGS_PLATFORM) -o gov_report.o
-	@./gov_report.o
-	@lcov -t $(PR_NAME)_tests -o $(PR_NAME)_tests.info -c -d .
-	@genhtml -o report $(PR_NAME)_tests.info
-	@open ./report/index.html
+s21_map.o: map/map.cc map/map.h
+	@$(CC) -c map/map.cc -o s21_map.o $(C_LIBS) $(CFLAGS) -DUSE_EXPORT
 
-clean:
-	@rm -f *.a
-	@rm -f *.o
-	@rm -f *.out
-	@rm -f *.gcda
-	@rm -f *.gcdo
-	@rm -f *.gcno
-	@rm -f *.info
+s21_multiset.o: multiset/multiset.cc multiset/multiset.h
+	@$(CC) -c multiset/multiset.cc -o s21_multiset.o $(C_LIBS) $(CFLAGS) -DUSE_EXPORT
 
-style: $(ALL_FILE)
-	@cp ../materials/linters/CPPLINT.cfg ./
-	@python3 ./../materials/linters/cpplint.py --extensions=cpp $(ALL_FILE) unit_test.cpp
-	@rm -f CPPLINT.cfg
+s21_queue.o: queue/queue.cc queue/queue.h
+	@$(CC) -c queue/queue.cc -o s21_queue.o $(C_LIBS) $(CFLAGS) -DUSE_EXPORT
 
-cppcheck: $(ALL_FILE_O)
-	@cppcheck --enable=all --suppress=missingIncludeSystem . $(ALL_FILE)
+s21_set.o: set/set.cc set/set.h
+	@$(CC) -c set/set.cc -o s21_set.o $(C_LIBS) $(CFLAGS) -DUSE_EXPORT
 
-check: style cppcheck
+s21_stack.o: stack/stack.cc stack/stack.h
+	@$(CC) -c stack/stack.cc -o s21_stack.o $(C_LIBS) $(CFLAGS) -DUSE_EXPORT
+
+s21_vector.o: vector/vector.cc vector/vector.h
+	@$(CC) -c vector/vector.cc -o s21_vector.o $(C_LIBS) $(CFLAGS) -DUSE_EXPORT
+
+s21_test.o: s21_test.cc s21_containers.h s21_containersplus.h
+	@$(CC) -c s21_test.cc -o s21_test.o $(C_LIBS) $(CFLAGS)
+
+s21_containers.a: s21_list.o s21_map.o s21_queue.o s21_set.o s21_stack.o s21_vector.o
+	@ar rc s21_containers.a s21_list.o s21_map.o s21_queue.o s21_set.o s21_stack.o s21_vector.o
+	@ranlib s21_containers.a
+
+s21_containersplus.a: s21_array.o s21_multiset.o
+	@ar rc s21_containersplus.a s21_array.o s21_multiset.o
+	@ranlib s21_containersplus.a
+
+test: s21_test
+	@./s21_test
+
+s21_test:  clean s21_test.o s21_containers.a s21_containersplus.a
+	@$(CC) s21_test.o s21_containers.a s21_containersplus.a -o s21_test $(TST_LIBS) $(CFLAGS)
+
+gcov_test: clean s21_test.o s21_containers.a s21_containersplus.a
+	@$(CC) --coverage s21_test.o */*.cc -o gcov_test $(TST_LIBS) $(CFLAGS)
+
+gcov_test.gcda: gcov_test
+	@chmod +x *
+	@./gcov_test
+
+gcov_test.info: gcov_test gcov_test.gcda
+	@lcov -t "gcov_test" -o gcov_test.info --no-external -c -d .
+
+gcov_report: clean gcov_test.info
+	@genhtml -o report/ gcov_test.info
+	@open report/index.html
+
+report_open: gcov_report
+	@open report/index.html
+
+clean: clean_test
+	@rm -rf ./*.o
+	@rm -rf ./*.a
+	@rm -rf ./*.dSYM
+	@rm -rf ./s21_test
+	@rm -rf ./gcov_test
+	@rm -rf ./RESULT_VALGRIND.txt
+
+clean_test:
+	@rm -rf report/ gcov_test exe *.gcda *.gcno *.info CPPLINT.cfg
+
+check:
+	@cp ../materials/linters/.clang-format ./
+	@clang-format -n ./*.cc ./*.h ./*/*.cc ./*/*.h
+	@rm -rf .clang-format
+
+git: clean
+	@git add *.cc *.h Makefile Dockerfile *.sh scripts/* ./*/*.cc ./*/*.h
+	@git commit -m "add changes ${m}"
+	@git push origin brittabu
+
+valgrind:
+	@./run.sh
