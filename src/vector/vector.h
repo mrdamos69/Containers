@@ -8,8 +8,6 @@
 
 #include "../s21_abstract_class.h"
 
-#define MAX_SIZE_VECTOR 2305843009213693951
-
 namespace s21 {
 template <typename T>
 class s21_vector : public abstract_containers_arr<T> {
@@ -29,17 +27,17 @@ class s21_vector : public abstract_containers_arr<T> {
   s21_vector() : abstract_containers_arr<T>() {}
   explicit s21_vector(size_type n);
   s21_vector(std::initializer_list<value_type> const &items);
-  s21_vector(const s21_vector &v) : s21_vector(v.m_size) { this->arr = v.arr; }
+  s21_vector(const s21_vector &v) : s21_vector(v.m_size) { *this = v; }
   s21_vector(s21_vector &&v);
-  ~s21_vector() { delete[] this->arr; }
+  ~s21_vector() {
+    if (this->arr) delete[] this->arr;
+  }
 
   s21_vector<T> &operator=(const s21_vector &v);
   // Перегрузка оператора присваивания для движущегося объекта
 
   bool operator==(const s21_vector<T> &v);
 
-  size_t max_size()
-      override;  // возвращает максимально возможное количество элементов
   void reserve(size_type m_size);
   // выделяет хранилище элементов размера и копирует текущие элементы массива в
   // новый выделенный массив
@@ -71,7 +69,6 @@ class s21_vector : public abstract_containers_arr<T> {
       Arg &&...args);  // добавляет новые элементы в конец контейнера
   void emplace_back() {}
 };
-// #include "vector.cc"
 }  // namespace s21
 
 #endif  // S21_VECTOR_H

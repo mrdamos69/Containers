@@ -6,7 +6,7 @@
 #include <utility>
 
 #include "../s21_abstract_class.h"
-#define MAX_SIZE_MAP 230584300921369395
+#include "../vector/vector.h"
 
 namespace s21 {
 template <typename T, typename T2>
@@ -68,9 +68,6 @@ class s21_map : public abstract_containers_tree<T> {
   iterator begin();  // возвращает итератор в начало
   iterator end();    // возвращает итератор в конец
 
-  size_type max_size()
-      override;  // возвращает максимально возможное количество элементов
-
   void clear();  // очищает содержимое
   void clear(Key_Map<key_type, mapped_type> *key);
 
@@ -97,18 +94,20 @@ class s21_map : public abstract_containers_tree<T> {
   iterator contains(const value_type &key);
 
   template <typename... Arg>
-  std::pair<iterator, bool> emplace(std::pair<T, T2> value, Arg &&...args);
+  s21::s21_vector<std::pair<iterator, bool>> emplace(std::pair<T, T2> value,
+                                                     Arg &&...args);
   std::pair<iterator, bool> emplace() {
     return std::pair<iterator, bool>(this->end(), true);
   }
 
  private:
-  bool input_in_branch(Key_Map<T, T2> *branch, const value_type &value);
+  std::pair<iterator, bool> input_in_branch(Key_Map<T, T2> *branch,
+                                            const value_type &value);
   void I_ll_be_back();
   void back_to_root();
+  Key_Map<T, T2> *go_to_begin(Key_Map<T, T2> *key);
   void set_copy(Key_Map<T, T2> *other);
 };
-// #include "map.cc"
 }  // namespace s21
 
 #endif  // S21_MAP_H

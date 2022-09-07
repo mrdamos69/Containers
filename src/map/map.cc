@@ -118,7 +118,7 @@ bool s21::iterator_map<T, T2>::it_end() {
 
 template <typename T, typename T2>
 s21::s21_map<T, T2>::~s21_map() {
-  this->clear();
+  if (this->element) this->clear();
 }
 
 template <typename T, typename T2>
@@ -144,11 +144,10 @@ s21::s21_map<T, T2>::s21_map(s21_map &&m)
 
 template <typename T, typename T2>
 s21::s21_map<T, T2> s21::s21_map<T, T2>::operator=(const s21_map &m) {
-  this->clear();
-  // for (auto&& i : m) {
-  //     this->insert(i);
-  // }
-  this->set_copy(m.element);
+  s21_map<T, T2> temp(m);
+  std::swap(temp.element, this->element);
+  std::swap(temp.back_elem, this->back_elem);
+  std::swap(temp.m_size, this->m_size);
   return *this;
 }
 
@@ -161,7 +160,7 @@ T &s21::s21_map<T, T2>::at(const Key_Map<key_type, mapped_type> &key) {
       }
     }
   }
-  throw std::invalid_argument("MyFunc argument too large.");
+  throw std::invalid_argument("s21_map argument too large.");
 }
 
 template <typename T, typename T2>
@@ -190,7 +189,9 @@ T2 &s21::s21_map<T, T2>::operator[](const key_type &key) {
 template <typename T, typename T2>
 void s21::s21_map<T, T2>::clear() {
   clear(this->element);
+  delete back_elem;
   this->m_size = 0;
+  this->back_elem = nullptr;
 }
 
 template <typename T, typename T2>
@@ -200,14 +201,12 @@ void s21::s21_map<T, T2>::clear(Key_Map<key_type, mapped_type> *key) {
     this->clear(key->pRight);
     delete key;
     (this->m_size)--;
-    element = nullptr;
   }
 }
 
 template <typename T, typename T2>
 typename s21::s21_map<T, T2>::iterator s21::s21_map<T, T2>::begin() {
-  while (element->pLeft != back_elem) element = element->pLeft;
-  return this->element;
+  return go_to_begin(this->element);
 }
 template <typename T, typename T2>
 typename s21::s21_map<T, T2>::iterator s21::s21_map<T, T2>::end() {
@@ -215,35 +214,27 @@ typename s21::s21_map<T, T2>::iterator s21::s21_map<T, T2>::end() {
 }
 
 template <typename T, typename T2>
-typename s21::s21_map<T, T2>::size_type s21::s21_map<T, T2>::max_size() {
-  return MAX_SIZE_MAP;
-}
-
-template <typename T, typename T2>
 std::pair<typename s21::s21_map<T, T2>::iterator, bool>
 s21::s21_map<T, T2>::insert(
     const typename s21::s21_map<T, T2>::value_type &value) {
-  std::pair<s21::s21_map<T, T2>::iterator, bool> result;
   if (element == nullptr) {
     element = new Key_Map<T, T2>();
     back_elem = new Key_Map<T, T2>();
     element->pRoot = element;
     element->data = value;
-    result.first = element;
-    result.second = true;
     element->pLeft = back_elem;
     element->pRight = back_elem;
     ++(this->m_size);
-  } else {
-    result.second = input_in_branch(element, value);
-    result.first = this->contains(value);
+    return std::pair<iterator, bool>(this->element, true);
   }
+  std::pair<iterator, bool> result = input_in_branch(element, value);
   I_ll_be_back();
   return result;
 }
 
 template <typename T, typename T2>
-bool s21::s21_map<T, T2>::input_in_branch(
+std::pair<typename s21::s21_map<T, T2>::iterator, bool>
+s21::s21_map<T, T2>::input_in_branch(
     s21::Key_Map<T, T2> *branch,
     const typename s21::s21_map<T, T2>::value_type &value) {
   if (branch->data.first > value.first) {
@@ -258,7 +249,7 @@ bool s21::s21_map<T, T2>::input_in_branch(
       branch->pRight = back_elem;
       back_elem->pBack = branch;
       ++(this->m_size);
-      return true;
+      return std::pair<iterator, bool>(branch, true);
     }
   } else if (branch->data.first < value.first) {
     if (branch->pRight != back_elem) {
@@ -272,10 +263,10 @@ bool s21::s21_map<T, T2>::input_in_branch(
       branch->pRight = back_elem;
       back_elem->pBack = branch;
       ++(this->m_size);
-      return true;
+      return std::pair<iterator, bool>(branch, true);
     }
   }
-  return false;
+  return std::pair<iterator, bool>(this->end(), false);
 }
 
 template <typename T, typename T2>
@@ -412,15 +403,17 @@ void s21::s21_map<T, T2>::set_copy(Key_Map<T, T2> *other) {
 }
 
 template <typename T, typename T2>
+s21::Key_Map<T, T2> *s21::s21_map<T, T2>::go_to_begin(Key_Map<T, T2> *key) {
+  while (key->pLeft != back_elem) key = key->pLeft;
+  return key;
+}
+
+template <typename T, typename T2>
 template <typename... Arg>
-std::pair<typename s21::s21_map<T, T2>::iterator, bool>
+s21::s21_vector<std::pair<typename s21::s21_map<T, T2>::iterator, bool>>
 s21::s21_map<T, T2>::emplace(std::pair<T, T2> value, Arg &&...args) {
-  this->insert(value.first, value.second);
-  this->emplace(args...);
-  for (auto i = this->begin(); i != this->end(); ++i) {
-    if (value == *i) {
-      return std::pair<iterator, bool>(i, true);
-    }
-  }
-  return std::pair<iterator, bool>(this->end(), false);
+  s21::s21_vector<std::pair<iterator, bool>> result;
+  result.push_back(this->insert(value.first, value.second));
+  this->emplace(std::forward<Arg>(args)...);
+  return result;
 }

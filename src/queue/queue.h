@@ -7,7 +7,6 @@
 #include <utility>
 
 #include "../s21_abstract_class.h"
-#define MAX_SIZE_QUEUE 768614336404564650
 
 namespace s21 {
 template <typename T>
@@ -43,7 +42,7 @@ class s21_queue : public abstract_containers_list<T> {
   void push(value_type data);  // добавляет элемент в голову
   void pop();                  // удаляет первый элемент
   void swap(s21_queue &other);  // Меняет местами элементы двух списков
-  size_t max_size() override;
+                                //   size_t max_size() override;
 
   template <typename... Arg>
   void emplace_back(
@@ -51,7 +50,6 @@ class s21_queue : public abstract_containers_list<T> {
       Arg &&...args);  // добавляет новые элементы в конец контейнера
   void emplace_back() {}
 };
-// #include "queue.cc"
 }  // namespace s21
 
 #endif  // S21_QUEUE_H

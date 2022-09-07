@@ -2,7 +2,7 @@
 
 template <typename T>
 void s21::s21_vector<T>::reserve_more_capacity(size_t size) {
-  if (size > this->m_capacity) {
+  if (size >= this->m_capacity) {
     value_type *buff = new value_type[size]();
     for (size_t i = 0; i < this->m_size; ++i) buff[i] = std::move(this->arr[i]);
     delete[] this->arr;
@@ -19,8 +19,12 @@ s21::s21_vector<T>::s21_vector(size_type n) {
 
 template <typename T>
 s21::s21_vector<T>::s21_vector(s21_vector &&v) : s21_vector(v) {
-  v.arr = nullptr;
-  v.m_size = 0;
+  if (this->arr != v.arr) {
+    v.arr = nullptr;
+    v.m_size = 0;
+  } else {
+    throw std::invalid_argument("s21_map argument too large.");
+  }
 }
 
 template <typename T>
@@ -38,10 +42,8 @@ s21::s21_vector<T>::s21_vector(std::initializer_list<value_type> const &items) {
 
 template <typename T>
 s21::s21_vector<T> &s21::s21_vector<T>::operator=(const s21_vector<T> &v) {
-  if (this->arr) {
-    this->clear();
-  }
-  for (size_t i = 0; i <= v.m_size; i++) {
+  if (this->arr) this->clear();
+  for (size_t i = 0; i < v.m_size; i++) {
     this->push_back(v.arr[i]);
   }
   return *this;
@@ -70,23 +72,19 @@ void s21::s21_vector<T>::shrink_to_fit() {
   for (size_t i = 0; i < this->m_size; i++) {
     current[i] = this->arr[i];
   }
-  delete[] this->arr;
-  this->arr = new value_type[this->m_size]();
   this->m_capacity = this->m_size;
-  for (size_t i = 0; i < this->m_size; i++) {
-    this->arr[i] = current[i];
-  }
-}
-
-template <typename T>
-size_t s21::s21_vector<T>::max_size() {
-  return (MAX_SIZE_VECTOR / sizeof(T)) * sizeof(T);
+  std::swap(this->arr, current);
+  delete[] current;
 }
 
 template <typename T>
 void s21::s21_vector<T>::reserve(size_type m_size) {
-  T *current = new value_type[m_size];
-  for (size_t i = 0; i < m_size; i++) current[i] = this->arr[i];
+  if (m_size > this->m_size) {
+    T *current = new value_type[m_size]();
+    for (size_t i = 0; i < m_size; i++) current[i] = this->arr[i];
+    std::swap(this->arr, current);
+    delete[] current;
+  }
 }
 
 template <typename T>
@@ -107,7 +105,8 @@ void s21::s21_vector<T>::pop_back() {
       x--;
   }
   this->m_size--;
-  this->arr = current;
+  std::swap(this->arr, current);
+  delete[] current;
 }
 
 template <typename T>
@@ -124,11 +123,9 @@ void s21::s21_vector<T>::push_front(const_reference value) {
 
 template <typename T>
 void s21::s21_vector<T>::swap(s21_vector &other) {
-  s21_vector<T> temp(*this);
-  *this = other;
-  other = temp;
-  other.m_size -= 1;
-  this->m_size -= 1;
+  std::swap(this->arr, other.arr);
+  std::swap(this->m_size, other.m_size);
+  std::swap(this->m_capacity, other.m_capacity);
 }
 
 template <typename T>

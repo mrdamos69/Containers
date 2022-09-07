@@ -14,6 +14,8 @@ template <typename T>
 s21::iterator_cl<T> &s21::iterator_cl<T>::operator++() {
   if (this->const_current->pNext != nullptr)
     this->const_current = this->const_current->pNext;
+  else
+    this->const_current = this->begin_current;
   return *this;
 }
 
@@ -57,6 +59,8 @@ s21::s21_list<T>::s21_list(const s21_list &l) : s21_list() {
 
 template <typename T>
 s21::s21_list<T>::s21_list(s21_list &&l) : s21_list<T>(l) {
+  if (this->head == l.head)
+    throw std::invalid_argument("s21_list argument too large.");
   l.clear();
 }
 
@@ -79,7 +83,7 @@ void s21::s21_list<T>::push_back(value_type data) {
     this->head = new Node<T>(data);
     this->tail = new Node<T>;
     this->head->pNext = this->tail;
-    this->tail->pNext = this->head->pNext;
+    this->tail->pNext = nullptr;
   } else {
     Node<T> *current = this->head;
     while (current->pNext != this->tail) {
@@ -102,7 +106,7 @@ void s21::s21_list<T>::push_front(value_type data) {
     this->tail = new Node<T>;
     this->head->pNext = this->tail;
     this->tail->pBack = this->head;
-    this->tail->pNext = this->head->pNext;
+    this->tail->pNext = nullptr;
   } else {
     this->head = new Node<value_type>(data, this->head);
   }

@@ -7,7 +7,6 @@
 #include <utility>
 
 #include "../s21_abstract_class.h"
-#define MAX_SIZE_STECK 768614336404564650
 
 namespace s21 {
 template <typename T>
@@ -15,7 +14,6 @@ class s21_stack : public abstract_containers_list<T> {
  private:
   void push_back(T data);
   void reverse();
-  size_t max_size() override;
 
  public:
   using value_type = T;  // Tопределяет тип элемента (T — параметр шаблона)
@@ -32,8 +30,9 @@ class s21_stack : public abstract_containers_list<T> {
   explicit s21_stack(const s21_stack &s);  // конструктор копирования
   s21_stack(s21_stack &&s);  // конструктор перемещения
   ~s21_stack();              // деструктор
-  s21_stack<T> &operator=(const s21_stack &s);
-  // Перегрузка оператора присваивания для движущегося объекта
+  s21_stack<T> &operator=(
+      const s21_stack
+          &s);  // Перегрузка оператора присваивания для движущегося объекта
   const_reference top();  // получить доступ к первому элементу
   void push(value_type data);  // добавляет элемент в голову
   void pop();                  // удаляет первый элемент
@@ -46,7 +45,6 @@ class s21_stack : public abstract_containers_list<T> {
       Arg &&...args);  // добавляет новые элементы в верхнюю часть контейнера
   void emplace_front() {}
 };
-// #include "stack.cc"
 }  // namespace s21
 
 #endif  // S21_STACK_H

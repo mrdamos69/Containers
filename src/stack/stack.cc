@@ -17,6 +17,8 @@ s21::s21_stack<T>::s21_stack(const s21_stack &s) : s21_stack() {
 
 template <typename T>
 s21::s21_stack<T>::s21_stack(s21_stack &&s) : s21::s21_stack<T>(s) {
+  if (this->head == s.head)
+    throw std::invalid_argument("s21_steck argument too large.");
   s.clear();
 }
 
@@ -98,13 +100,8 @@ void s21::s21_stack<T>::clear() {
 }
 
 template <typename T>
-size_t s21::s21_stack<T>::max_size() {
-  return MAX_SIZE_STECK;
-}
-
-template <typename T>
 template <typename... Arg>
 void s21::s21_stack<T>::emplace_front(T value, Arg &&...args) {
   this->push(value);
-  this->emplace_front(args...);
+  this->emplace_front(std::forward<Arg>(args)...);
 }

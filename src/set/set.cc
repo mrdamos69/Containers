@@ -127,7 +127,7 @@ bool s21::iterator_set<T>::it_end() {
 
 template <typename T>
 s21::s21_set<T>::~s21_set() {
-  this->clear();
+  if (this->element) this->clear();
 }
 
 template <typename T>
@@ -150,43 +150,36 @@ s21::s21_set<T>::s21_set(s21_set &&s) : s21_set<T>(s) {
 
 template <typename T>
 s21::s21_set<T> s21::s21_set<T>::operator=(const s21_set &value) {
-  this->clear();
-  this->set_copy(value.element);
+  s21_set<T> temp(value);
+  std::swap(temp.element, this->element);
+  std::swap(temp.back_elem, this->back_elem);
+  std::swap(temp.m_size, this->m_size);
   return *this;
 }
 
 template <typename T>
-s21::s21_set<T>::iterator s21::s21_set<T>::begin() {
-  while (element->pLeft != back_elem) element = element->pLeft;
-  return this->element;
+typename s21::s21_set<T>::iterator s21::s21_set<T>::begin() {
+  return go_to_begin(this->element);
 }
 
 template <typename T>
-s21::s21_set<T>::iterator s21::s21_set<T>::end() {
+typename s21::s21_set<T>::iterator s21::s21_set<T>::end() {
   return this->back_elem;
 }
 
 template <typename T>
-size_t s21::s21_set<T>::max_size() {
-  return MAX_SIZE_SET;
-}
-
-template <typename T>
-std::pair<T, bool> s21::s21_set<T>::insert(const value_type &value) {
-  std::pair<T, bool> result;
+std::pair<s21::iterator_set<T>, bool> s21::s21_set<T>::insert(
+    const value_type &value) {
   if (element == nullptr) {
     element = new Key<T>();
     back_elem = new Key<T>();
     element->pRoot = element;
-    result.first = element->data = value;
-    result.second = true;
-    element->pLeft = back_elem;
-    element->pRight = back_elem;
+    element->data = value;
+    element->pLeft = element->pRight = back_elem;
     back_elem->data = ++(this->m_size);
-  } else {
-    result.second = input_in_branch(element, value);
-    result.first = value;
+    return std::pair<iterator, bool>(this->element, true);
   }
+  std::pair<iterator, bool> result = input_in_branch(element, value);
   I_ll_be_back();
   return result;
 }
@@ -203,7 +196,10 @@ bool s21::s21_set<T>::contains(const Key<T> &key) {
 
 template <typename T>
 void s21::s21_set<T>::clear() {
-  this->clear(element);
+  this->clear(this->element);
+  this->m_size = 0;
+  delete back_elem;
+  this->back_elem = nullptr;
 }
 
 template <typename T>
@@ -212,7 +208,8 @@ void s21::s21_set<T>::clear(Key<T> *key) {
     this->clear(key->pLeft);
     this->clear(key->pRight);
     delete key;
-    element = nullptr;
+    key = nullptr;
+    (this->m_size)--;
   }
 }
 
@@ -240,19 +237,27 @@ void s21::s21_set<T>::erase(iterator pos) {
         break;
       } else {
         if (pos.const_current->pRoot == pos.const_current) {
-          Key<T> *temp_data = pos.const_current;
+          Key<T> *temp_key = pos.const_current;
           pos.const_current = pos.const_current->pRight;
           while (pos.const_current->pLeft != back_elem) {
             pos.const_current = pos.const_current->pLeft;
           }
-          temp_data->data = pos.const_current->data;
+          temp_key->data = pos.const_current->data;
           pos.const_current->pBack->pLeft = back_elem;
           delete pos.const_current;
           (this->m_size)--;
           break;
         } else {
-          back_to_root();
+          // if (pos.const_current->pLeft && pos.const_current->pLeft !=
+          // this->back_elem) {
+          //   pos.const_current = pos.const_current->pLeft;
+          //   T temp_data = pos.const_current->data;
+          //   pos.const_current->pBack->pLeft = back_elem;
+          //   delete pos.const_current;
+          //   *i = temp_data;
+          // }
 
+          back_to_root();
           if (pos.const_current->pBack->pRight->data ==
               pos.const_current->data) {
             pos.const_current->pBack->pRight = back_elem;
@@ -264,13 +269,7 @@ void s21::s21_set<T>::erase(iterator pos) {
           pos.const_current->pBack = nullptr;
           set_copy(pos.const_current->pLeft);
           set_copy(pos.const_current->pRight);
-          /*******************************/
-          delete pos.const_current->pLeft;
-          // delete pos.const_current->pRight;
-          delete pos.const_current;
-          /*******************************/
-          // this->clear(i.const_current);
-          (this->m_size)--;
+          this->clear(pos.const_current);
           break;
         }
       }
@@ -280,9 +279,9 @@ void s21::s21_set<T>::erase(iterator pos) {
 
 template <typename T>
 void s21::s21_set<T>::swap(s21_set &other) {
-  s21_set<T> temp_set(*this);
-  *this = other;
-  other = temp_set;
+  std::swap(other.element, this->element);
+  std::swap(other.back_elem, this->back_elem);
+  std::swap(other.m_size, this->m_size);
 }
 
 template <typename T>
@@ -320,7 +319,8 @@ typename s21::s21_set<T>::iterator s21::s21_set<T>::find(const T key) {
 }
 
 template <typename T>
-bool s21::s21_set<T>::input_in_branch(Key<T> *branch, T value) {
+std::pair<typename s21::s21_set<T>::iterator, bool>
+s21::s21_set<T>::input_in_branch(Key<T> *branch, T value) {
   if (branch->data > value) {
     if (branch->pLeft != back_elem) {
       input_in_branch(branch->pLeft, value);
@@ -329,11 +329,10 @@ bool s21::s21_set<T>::input_in_branch(Key<T> *branch, T value) {
       branch->pLeft->pBack = branch;
       branch = branch->pLeft;
       branch->data = value;
-      branch->pLeft = back_elem;
-      branch->pRight = back_elem;
+      branch->pLeft = branch->pRight = back_elem;
       back_elem->pBack = branch;
       back_elem->data = ++(this->m_size);
-      return true;
+      return std::pair<iterator, bool>(branch, true);
     }
   } else if (branch->data < value) {
     if (branch->pRight != back_elem) {
@@ -343,14 +342,13 @@ bool s21::s21_set<T>::input_in_branch(Key<T> *branch, T value) {
       branch->pRight->pBack = branch;
       branch = branch->pRight;
       branch->data = value;
-      branch->pLeft = back_elem;
-      branch->pRight = back_elem;
+      branch->pLeft = branch->pRight = back_elem;
       back_elem->pBack = branch;
       back_elem->data = ++(this->m_size);
-      return true;
+      return std::pair<iterator, bool>(branch, true);
     }
   }
-  return false;
+  return std::pair<iterator, bool>(this->end(), false);
 }
 
 template <typename T>
@@ -364,15 +362,17 @@ void s21::s21_set<T>::I_ll_be_back() {
 }
 
 template <typename T>
+s21::Key<T> *s21::s21_set<T>::go_to_begin(Key<T> *key) {
+  while (key->pLeft != back_elem) key = key->pLeft;
+  return key;
+}
+
+template <typename T>
 template <typename... Arg>
-std::pair<typename s21::s21_set<T>::iterator, bool> s21::s21_set<T>::emplace(
-    T value, Arg &&...args) {
-  this->insert(value);
-  this->emplace(args...);
-  for (auto i = this->begin(); i != this->end(); ++i) {
-    if (value == *i) {
-      return std::pair<iterator, bool>(i, true);
-    }
-  }
-  return std::pair<iterator, bool>(this->end(), false);
+s21::s21_vector<std::pair<typename s21::s21_set<T>::iterator, bool>>
+s21::s21_set<T>::emplace(T value, Arg &&...args) {
+  s21::s21_vector<std::pair<typename s21::s21_set<T>::iterator, bool>> result;
+  result.push_back(this->insert(value));
+  this->emplace(std::forward<Arg>(args)...);
+  return result;
 }

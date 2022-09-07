@@ -19,6 +19,8 @@ s21::s21_queue<T>::s21_queue(const s21_queue &q) : s21_queue() {
 
 template <typename T>
 s21::s21_queue<T>::s21_queue(s21_queue &&q) : s21::s21_queue<T>(q) {
+  if (this->head == q.head)
+    throw std::invalid_argument("s21_queue argument too large.");
   q.clear();
 }
 
@@ -110,11 +112,6 @@ void s21::s21_queue<T>::clear() {
   while (this->m_size) {
     this->pop();
   }
-}
-
-template <typename T>
-size_t s21::s21_queue<T>::max_size() {
-  return MAX_SIZE_QUEUE;
 }
 
 template <typename T>

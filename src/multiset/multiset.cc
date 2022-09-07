@@ -19,8 +19,9 @@ s21::s21_multiset<T>::s21_multiset(s21_multiset &&s) : s21_multiset<T>(s) {
 }
 
 template <typename T>
-s21::iterator_set<T> s21::s21_multiset<T>::insert(const T &value) {
-  s21::iterator_set<T> it_result;
+std::pair<s21::iterator_set<T>, bool> s21::s21_multiset<T>::insert(
+    const T &value) {
+  std::pair<iterator_set<T>, bool> result;
   if (this->element == nullptr) {
     this->element = new Key<T>();
     this->back_elem = new Key<T>();
@@ -30,14 +31,15 @@ s21::iterator_set<T> s21::s21_multiset<T>::insert(const T &value) {
     this->element->pRight = this->back_elem;
     this->back_elem->data = ++(this->m_size);
   } else {
-    input_in_branch(this->element, value);
+    result = input_in_branch(this->element, value);
   }
   this->I_ll_be_back();
-  return it_result;
+  return result;
 }
 
 template <typename T>
-bool s21::s21_multiset<T>::input_in_branch(Key<T> *branch, T value) {
+std::pair<s21::iterator_set<T>, bool> s21::s21_multiset<T>::input_in_branch(
+    Key<T> *branch, T value) {
   if (branch->data >= value) {
     if (branch->pLeft != this->back_elem) {
       input_in_branch(branch->pLeft, value);
@@ -50,7 +52,7 @@ bool s21::s21_multiset<T>::input_in_branch(Key<T> *branch, T value) {
       branch->pRight = this->back_elem;
       this->back_elem->pBack = branch;
       this->back_elem->data = ++(this->m_size);
-      return true;
+      return std::pair<s21::iterator_set<T>, bool>(branch, true);
     }
   } else if (branch->data < value) {
     if (branch->pRight != this->back_elem) {
@@ -64,20 +66,19 @@ bool s21::s21_multiset<T>::input_in_branch(Key<T> *branch, T value) {
       branch->pRight = this->back_elem;
       this->back_elem->pBack = branch;
       this->back_elem->data = ++(this->m_size);
-      return true;
+      return std::pair<s21::iterator_set<T>, bool>(branch, true);
     }
   }
-  return false;
+  return std::pair<s21::iterator_set<T>, bool>(this->end(), false);
 }
 
 template <typename T>
 s21::s21_multiset<T> s21::s21_multiset<T>::operator=(
     const s21_multiset<T> &value) {
-  this->clear();
-  // for (auto&& i : value) {
-  //     this->insert(i);
-  // }
-  this->set_copy(value.element);
+  s21_multiset<T> temp(value);
+  std::swap(temp.element, this->element);
+  std::swap(temp.back_elem, this->back_elem);
+  std::swap(temp.m_size, this->m_size);
   return *this;
 }
 
@@ -103,20 +104,18 @@ void s21::s21_multiset<T>::set_copy(Key<T> *other) {
 }
 
 template <typename T>
-std::pair<s21::iterator_set<T>, bool> s21::s21_multiset<T>::emplace() {
-  return std::pair<s21::iterator_set<T>, bool>(this->end(), true);
+s21::s21_vector<std::pair<typename s21::s21_set<T>::iterator, bool>>
+s21::s21_multiset<T>::emplace() {
+  s21::s21_vector<std::pair<typename s21::s21_set<T>::iterator, bool>> result;
+  return result;
 }
 
 template <typename T>
 template <typename... Arg>
-std::pair<s21::iterator_set<T>, bool> s21::s21_multiset<T>::emplace(
-    T value, Arg &&...args) {
-  this->insert(value);
-  this->emplace(args...);
-  for (auto i = this->begin(); i != this->end(); ++i) {
-    if (value == *i) {
-      return std::pair<s21::iterator_set<T>, bool>(i, true);
-    }
-  }
-  return std::pair<s21::iterator_set<T>, bool>(this->end(), false);
+s21::s21_vector<std::pair<typename s21::s21_set<T>::iterator, bool>>
+s21::s21_multiset<T>::emplace(T value, Arg &&...args) {
+  s21::s21_vector<std::pair<typename s21::s21_set<T>::iterator, bool>> result;
+  result.push_back(this->insert(value));
+  this->emplace(std::forward<Arg>(args)...);
+  return result;
 }

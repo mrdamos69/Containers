@@ -39,7 +39,6 @@ class s21_array : public abstract_containers_arr<T> {
   void fill(const_reference value);
   // присваивает заданное значение value всем элементам в контейнере
 };
-// #include "array.cc"
 }  // namespace s21
 
 #endif  // S21_ARRAY_H

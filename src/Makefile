@@ -45,10 +45,11 @@ s21_containersplus.a: s21_array.o s21_multiset.o
 	@ranlib s21_containersplus.a
 
 test: s21_test
+	@clang-format -i ./*.cc ./*.h *.cc *.h
 	@./s21_test
 
 s21_test:  clean s21_test.o s21_containers.a s21_containersplus.a
-	@$(CC) s21_test.o s21_containers.a s21_containersplus.a -o s21_test $(TST_LIBS) $(CFLAGS)
+	@$(CC) s21_test.o s21_containers.a s21_containersplus.a -o s21_test $(TST_LIBS) $(CFLAGS) -g
 
 gcov_test: clean s21_test.o s21_containers.a s21_containersplus.a
 	@$(CC) --coverage s21_test.o */*.cc -o gcov_test $(TST_LIBS) $(CFLAGS)
@@ -81,7 +82,7 @@ clean_test:
 check:
 	@cp ../materials/linters/.clang-format ./
 	@clang-format -n ./*.cc ./*.h ./*/*.cc ./*/*.h
-	@rm -rf .clang-format
+#	@rm -rf .clang-format
 
 git: clean
 	@git add *.cc *.h Makefile Dockerfile *.sh scripts/* ./*/*.cc ./*/*.h
@@ -90,3 +91,7 @@ git: clean
 
 valgrind:
 	@./run.sh
+
+leaks: $(ALL_FILE_O)
+	@CK_FORK=no valgrind --vgdb=no --leak-check=full --show-leak-kinds=all --tool=memcheck --track-origins=yes --verbose --log-file=RESULT_VALGRIND.txt ./s21_test
+

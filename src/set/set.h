@@ -4,9 +4,10 @@
 #include <initializer_list>
 #include <iostream>
 #include <utility>
+#include <vector>
 
 #include "../s21_abstract_class.h"
-#define MAX_SIZE_SET 230584300921369395
+#include "../vector/vector.h"
 
 namespace s21 {
 template <typename T>
@@ -72,13 +73,11 @@ class s21_set : public abstract_containers_tree<T> {
   s21_set operator=(const s21_set &value);
   iterator begin();  // возвращает итератор в начало
   iterator end();    // возвращает итератор в конец
-  size_type max_size()
-      override;  // возвращает максимально возможное количество элементов
 
   void clear();  // очищает содержимое
   void clear(Key<T> *key);
 
-  std::pair<T, bool> insert(const value_type &value);
+  std::pair<iterator, bool> insert(const value_type &value);
   /*вставляет узел и возвращает итератор туда, где элемент находится
   в контейнере, и логическое значение, обозначающее, имела ли место вставка*/
 
@@ -93,17 +92,17 @@ class s21_set : public abstract_containers_tree<T> {
   // проверяет, содержит ли контейнер элемент с определенным ключом
 
   template <typename... Arg>
-  std::pair<iterator, bool> emplace(T value, Arg &&...args);
+  s21::s21_vector<std::pair<iterator, bool>> emplace(T value, Arg &&...args);
   std::pair<iterator, bool> emplace() {
     return std::pair<iterator, bool>(this->end(), true);
   }
 
  private:
   void back_to_root() override;
+  Key<T> *go_to_begin(Key<T> *key);
   virtual void set_copy(Key<T> *other);
-  virtual bool input_in_branch(Key<T> *branch, T value);
+  virtual std::pair<iterator, bool> input_in_branch(Key<T> *branch, T value);
 };
-// #include "set.cc"
 }  // namespace s21
 
 #endif  // S21_SET_H

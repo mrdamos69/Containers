@@ -23,9 +23,9 @@ using std::set;
 using std::stack;
 using std::vector;
 
-// /**********************/
-// /***** ___LIST___ *****/
-// /**********************/
+/**********************/
+/***** ___LIST___ *****/
+/**********************/
 
 TEST(Test_s21_list, s21_list_test_list) {
   s21::s21_list<int> s21_list_1;
@@ -45,6 +45,34 @@ TEST(Test_s21_list, s21_list_test_list_param) {
     // endl;
     ASSERT_EQ(i, s21_list_1[y++]);
   }
+}
+
+TEST(Test_s21_list, s21_list_copy) {
+  s21::s21_list<int> s21_list_1{10, 5, 15, 13};
+  s21::s21_list<int> s21_list_2(std::move(s21_list_1));
+  list<int> std_list_1{10, 5, 15, 13};
+  list<int> std_list_2(std::move(std_list_1));
+
+  auto y = s21_list_2.begin();
+  for (auto &&i : std_list_2) {
+    // cout << "std_list: " << i << " "
+    //      << "s21_list: " << *y << endl;
+    ASSERT_EQ(i, *y);
+    y++;
+  }
+
+  auto x = std_list_2.begin();
+  for (auto &&i : s21_list_2) {
+    // cout << "std_list: " << i << " " << "s21_list: " << s21_list_1[y++] <<
+    // endl;
+    ASSERT_EQ(i, *x);
+    x++;
+  }
+}
+
+TEST(Test_s21_list, s21_list_copy_2) {
+  ASSERT_THROW(s21::s21_list<int> s21_list_2(std::move(s21_list_2)),
+               std::invalid_argument);
 }
 
 TEST(Test_s21_list, s21_list_test_list_construct_copy) {
@@ -156,8 +184,8 @@ TEST(Test_s21_list, s21_list_test_insert_2) {
 
   int j = 0;
   for (auto &i : std_list_1) {
-    // cout << "std_list: " << i << " " << "s21_list: " << s21_list_1[j++] <<
-    // endl;
+    // cout << "std_list: " << i << " "
+    //      << "s21_list: " << s21_list_1[j++] << endl;
     ASSERT_EQ(i, s21_list_1[j++]);
   }
   // cout << "\n" << "std_list: " << *std_result << " " << "s21_list: " <<
@@ -402,8 +430,8 @@ TEST(Test_s21_list, s21_list_test_splice) {
 
   int count = 0;
   for (auto &n : std_list_1) {
-    // cout << "std_list: " << n << " " << "s21_list: " <<
-    // s21_list_1[count++] << endl;
+    // cout << "std_list: " << n << " "
+    //      << "s21_list: " << s21_list_1[count++] << endl;
     ASSERT_EQ(n, s21_list_1[count++]);
   }
 }
@@ -443,11 +471,11 @@ TEST(Test_s21_list, s21_list_test_emplace_1) {
 TEST(Test_s21_list, s21_list_test_emplace_2) {
   s21::s21_list<int> s21_list_1{1, 2, 3, 4, 5, 6, 7};
   auto s21_iter = s21_list_1.end();
-  ++s21_iter;
   s21_list_1.emplace(s21_iter, 15, 14, 13, 12, 11, 10, 9, 8);
   int count = 1;
   for (auto &&i : s21_list_1) {
-    // cout << "std_list: " << count << " == " << "s21_list: " << i << endl;
+    // cout << "std_list: " << count << " == "
+    //      << "s21_list: " << i << endl;
     ASSERT_EQ(i, count);
     count++;
   }
@@ -501,10 +529,23 @@ TEST(Test_s21_list, s21_list_test_emplace_front_2) {
   s21_list_1.emplace_front(7, 6, 5, 4, 3, 2, 1);
   int count = 1;
   for (auto &&i : s21_list_1) {
-    // cout << "std_list: " << count << " == " << "s21_list: " << i << endl;
+    // cout << "std_list: " << count << " == "
+    //      << "s21_list: " << i << endl;
     ASSERT_EQ(i, count);
     count++;
   }
+}
+
+TEST(Test_s21_list, s21_list_cycle) {
+  s21::s21_list<int> s21_list_1{1, 2, 3};
+  list<int> std_list_1{1, 2, 3};
+  auto x = s21_list_1.begin();
+  auto y = std_list_1.begin();
+
+  for (size_t i = 0; i < 5; i++) x++;
+  for (size_t i = 0; i < 5; i++) y++;
+  // cout << "std :" << *y << " == " << *x << endl;
+  ASSERT_EQ(*y, *x);
 }
 
 /**********************/
@@ -565,8 +606,8 @@ TEST(Test_s21_vector, s21_vector_test_insert_2) {
   std_vector_1.insert(std_itr, 777);
   int y = 0;
   for (auto &i : std_vector_1) {
-    // cout << "std_vector: " << i << " " << "s21_vector: " << s21_vector_1[y++]
-    // << endl;
+    // cout << "std_vector: " << i << " " << "s21_vector: " <<
+    // s21_vector_1[y++] << endl;
     ASSERT_EQ(i, s21_vector_1[y++]);
   }
 }
@@ -669,10 +710,21 @@ TEST(Test_s21_vector, s21_vector_test_swap_1) {
 
   int y = 0;
   for (auto &i : std_vector_1) {
-    // cout << "std_vector: " << i << " " << "s21_vector: " << s21_vector_1[y++]
-    // << endl;
+    // cout << "std_vector: " << i << " " << "s21_vector: " <<
+    // s21_vector_1[y++] << endl;
     ASSERT_EQ(i, s21_vector_1[y++]);
   }
+
+  int x = 0;
+  for (auto &i : s21_vector_1) {
+    // cout << "s21_vector: " << i << " "
+    //      << "std_vector: " << s21_vector_1[x++] << endl;
+    ASSERT_EQ(i, std_vector_1[x++]);
+  }
+  // ASSERT_EQ(std_vector_1.capacity(), s21_vector_1.get_capacity());
+  // cout << std_vector_1.capacity() << " == " << s21_vector_1.get_capacity()
+  // << endl;
+  ASSERT_EQ(std_vector_1.size(), s21_vector_1.get_size());
 }
 
 TEST(Test_s21_vector, s21_vector_test_swap_2) {
@@ -690,6 +742,17 @@ TEST(Test_s21_vector, s21_vector_test_swap_2) {
     // s21_vector_1[y++] << endl;
     ASSERT_EQ(i, s21_vector_1[y++]);
   }
+
+  int x = 0;
+  for (auto &i : s21_vector_1) {
+    // cout << "s21_vector: " << i << " "
+    //      << "std_vector: " << s21_vector_1[x++] << endl;
+    ASSERT_EQ(i, std_vector_1[x++]);
+  }
+  // ASSERT_EQ(std_vector_1.capacity(), s21_vector_1.get_capacity());
+  // cout << std_vector_1.capacity() << " == " << s21_vector_1.get_capacity()
+  // << endl;
+  ASSERT_EQ(std_vector_1.size(), s21_vector_1.get_size());
 }
 
 TEST(Test_s21_vector, s21_vector_test_swap_3) {
@@ -707,6 +770,17 @@ TEST(Test_s21_vector, s21_vector_test_swap_3) {
     // s21_vector_1[y++] << endl;
     ASSERT_EQ(i, s21_vector_1[y++]);
   }
+
+  int x = 0;
+  for (auto &i : s21_vector_1) {
+    // cout << "s21_vector: " << i << " "
+    //      << "std_vector: " << s21_vector_1[x++] << endl;
+    ASSERT_EQ(i, std_vector_1[x++]);
+  }
+  // ASSERT_EQ(std_vector_1.capacity(), s21_vector_1.get_capacity());
+  // cout << std_vector_1.capacity() << " == " << s21_vector_1.get_capacity()
+  // << endl;
+  ASSERT_EQ(std_vector_1.size(), s21_vector_1.get_size());
 }
 
 TEST(Test_s21_vector, s21_vector_test_reverse_1) {
@@ -716,10 +790,45 @@ TEST(Test_s21_vector, s21_vector_test_reverse_1) {
   std_vector_1.reserve(3);
   int y = 0;
   for (auto &i : std_vector_1) {
-    // cout << "std_vector: " << i << " " << "s21_vector: " <<
-    // s21_vector_1[y++] << endl;
+    // cout << "std_vector: " << i << " "
+    //      << "s21_vector: " << s21_vector_1[y++] << endl;
     ASSERT_EQ(i, s21_vector_1[y++]);
   }
+
+  int x = 0;
+  for (auto &i : s21_vector_1) {
+    // cout << "s21_vector: " << i << " "
+    //      << "std_vector: " << s21_vector_1[x++] << endl;
+    ASSERT_EQ(i, std_vector_1[x++]);
+  }
+  // ASSERT_EQ(std_vector_1.capacity(), s21_vector_1.get_capacity());
+  // cout << std_vector_1.capacity() << " == " << s21_vector_1.get_capacity()
+  //      << endl;
+  ASSERT_EQ(std_vector_1.size(), s21_vector_1.get_size());
+}
+
+TEST(Test_s21_vector, s21_vector_test_reverse_2) {
+  s21::s21_vector<int> s21_vector_1{1, 2, 3, 4};
+  vector<int> std_vector_1{1, 2, 3, 4};
+  s21_vector_1.reserve(10);
+  std_vector_1.reserve(10);
+  int y = 0;
+  for (auto &i : std_vector_1) {
+    // cout << "std_vector: " << i << " "
+    //      << "s21_vector: " << s21_vector_1[y++] << endl;
+    ASSERT_EQ(i, s21_vector_1[y++]);
+  }
+
+  int x = 0;
+  for (auto &i : s21_vector_1) {
+    // cout << "s21_vector: " << i << " "
+    //      << "std_vector: " << s21_vector_1[x++] << endl;
+    ASSERT_EQ(i, std_vector_1[x++]);
+  }
+  // ASSERT_EQ(std_vector_1.capacity(), s21_vector_1.get_capacity());
+  // cout << std_vector_1.capacity() << " == " << s21_vector_1.get_capacity()
+  //      << endl;
+  ASSERT_EQ(std_vector_1.size(), s21_vector_1.get_size());
 }
 
 TEST(Test_s21_vector, s21_vector_test_empty_1) {
@@ -818,16 +927,6 @@ TEST(Test_s21_vector, s21_vector_test_shrink_to_fit) {
   s21_vector_1.shrink_to_fit();
   std_vector_1.shrink_to_fit();
   ASSERT_EQ(s21_vector_1.get_capacity(), std_vector_1.capacity());
-}
-
-TEST(Test_s21_vector, s21_vector_test_1) {
-  s21::s21_vector<int> s21_vector_1{10, 10, 5, 5, 15, 13, 13};
-  s21_vector_1[15] = 8;
-  // cout << "s21: " << s21_vector_1[15] << endl;
-  vector<int> std_vector_1{10, 10, 5, 5, 15, 13, 13};
-  std_vector_1[15] = 8;
-  // cout << "std: " << std_vector_1[15] << endl;
-  ASSERT_EQ(std_vector_1[15], s21_vector_1[15]);
 }
 
 TEST(Test_s21_vector, s21_vector_test_operator_eq_1) {
@@ -929,6 +1028,24 @@ TEST(Test_s21_vector, s21_vector_test_emplace_back_2) {
   }
 }
 
+TEST(Test_s21_list, s21_list_BIG_LIST) {
+  s21::s21_list<int> s21_list_1;
+  list<int> std_list_1;
+  int rand_count = 0;
+  for (size_t i = 0; i < 1000; i++) {
+    rand_count = std::rand() % 10000;
+    s21_list_1.push_back(rand_count);
+    std_list_1.push_back(rand_count);
+  }
+  ASSERT_EQ(s21_list_1.get_size(), std_list_1.size());
+  auto s21_it = s21_list_1.begin();
+  for (auto &i : std_list_1) {
+    // cout << "s21_list: " << *s21_it << " == " << i << endl;
+    ASSERT_EQ(i, *s21_it);
+    s21_it++;
+  }
+}
+
 /**********************/
 /***** ___ARRAY___ ****/
 /**********************/
@@ -964,8 +1081,8 @@ TEST(Test_s21_array, s21_array_test_swap_1) {
 
   int y = 0;
   for (auto &i : std_array_1) {
-    // cout << "std_array: " << i << " " << "s21_array: " << s21_array_1[y++] <<
-    // endl;
+    // cout << "std_array: " << i << " " << "s21_array: " << s21_array_1[y++]
+    // << endl;
     ASSERT_EQ(i, s21_array_1[y++]);
   }
 }
@@ -997,8 +1114,8 @@ TEST(Test_s21_array, s21_array_test_swap_3) {
 
   int y = 0;
   for (auto &i : std_array_1) {
-    // cout << "std_array: " << i << " " << "s21_array: " << s21_array_1[y++] <<
-    // endl;
+    // cout << "std_array: " << i << " " << "s21_array: " << s21_array_1[y++]
+    // << endl;
     ASSERT_EQ(i, s21_array_1[y++]);
   }
 }
@@ -1123,6 +1240,27 @@ TEST(Test_s21_stack, s21_stack_test_stack_2) {
   }
 }
 
+TEST(Test_s21_stack, s21_stack_copy) {
+  s21::s21_stack<int> s21_stack_1{5, 4, 3, 2, 1};
+  s21::s21_stack<int> s21_stack_2(std::move(s21_stack_1));
+
+  stack<int> std_stack_1;
+  for (int i = 0; i < 5; i++) std_stack_1.push(i);
+  stack<int> std_stack_2(std::move(std_stack_1));
+
+  for (int i = 5; !s21_stack_2.empty(); i--) {
+    ASSERT_EQ(i, s21_stack_2.top());
+    // cout << "std_stack: " << std_stack_2.top() << " "
+    //      << "s21_stack: " << s21_stack_2.top() << endl;
+    s21_stack_2.pop();
+  }
+}
+
+TEST(Test_s21_stack, s21_stack_copy_2) {
+  ASSERT_THROW(s21::s21_stack<int> s21_stack_2(std::move(s21_stack_2)),
+               std::invalid_argument);
+}
+
 TEST(Test_s21_stack, s21_stack_test_operator_1) {
   s21::s21_stack<int> s21_stack_1;
   s21::s21_stack<int> s21_stack_2;
@@ -1228,6 +1366,24 @@ TEST(Test_s21_stack, s21_stack_test_emplace_front_2) {
   }
 }
 
+TEST(Test_s21_stack, s21_stack_BIG_STACK) {
+  s21::s21_stack<int> s21_stack_1;
+  stack<int> std_stack_1;
+  int rand_count = 0;
+  for (size_t i = 0; i < 1000; i++) {
+    rand_count = std::rand() % 10000;
+    s21_stack_1.push(rand_count);
+    std_stack_1.push(rand_count);
+  }
+  for (size_t i = s21_stack_1.get_size(); i > 0; i--) {
+    // cout << "std_stack 1: " << std_stack_1.top() << " " <<
+    // "s21_stack 1: " << s21_stack_1.top() << endl;
+    ASSERT_EQ(std_stack_1.top(), s21_stack_1.top());
+    std_stack_1.pop();
+    s21_stack_1.pop();
+  }
+}
+
 /**********************/
 /***** ___QUEUE___ ****/
 /**********************/
@@ -1246,6 +1402,7 @@ TEST(Test_s21_queue, s21_queue_test_queue_1) {
     std_queue_1.pop();
     s21_queue_1.pop();
   }
+  ASSERT_EQ(std_queue_1.size(), s21_queue_1.get_size());
 }
 
 TEST(Test_s21_queue, s21_queue_test_queue_2) {
@@ -1257,6 +1414,27 @@ TEST(Test_s21_queue, s21_queue_test_queue_2) {
     // "s21_stack: " << s21_queue_1.front() << endl;
     s21_queue_1.pop();
   }
+}
+
+TEST(Test_s21_queue, s21_queue_copy) {
+  s21::s21_queue<int> s21_queue_1{5, 4, 3, 2, 1};
+  s21::s21_queue<int> s21_queue_2(std::move(s21_queue_1));
+
+  queue<int> std_queue_1;
+  for (int i = 0; i < 5; i++) std_queue_1.push(i);
+  queue<int> std_queue_2(std::move(std_queue_1));
+
+  for (int i = 5; !s21_queue_2.empty(); i--) {
+    ASSERT_EQ(i, s21_queue_2.front());
+    // cout << "std_queue: " << std_queue_2.top() << " "
+    //      << "s21_queue: " << s21_queue_2.top() << endl;
+    s21_queue_2.pop();
+  }
+}
+
+TEST(Test_s21_queue, s21_queue_copy_2) {
+  ASSERT_THROW(s21::s21_queue<int> s21_queue_2(std::move(s21_queue_2)),
+               std::invalid_argument);
 }
 
 TEST(Test_s21_queue, s21_queue_test_operator_1) {
@@ -1285,6 +1463,7 @@ TEST(Test_s21_queue, s21_queue_test_operator_1) {
     std_queue_2.pop();
     s21_queue_2.pop();
   }
+  ASSERT_EQ(std_queue_1.size(), s21_queue_1.get_size());
 }
 
 TEST(Test_s21_queue, s21_queue_test_swap) {
@@ -1320,6 +1499,7 @@ TEST(Test_s21_queue, s21_queue_test_swap) {
     std_queue_1.pop();
     s21_queue_1.pop();
   }
+  ASSERT_EQ(std_queue_1.size(), s21_queue_1.get_size());
 }
 
 TEST(Test_s21_queue, s21_queue_test_empty_1) {
@@ -1352,12 +1532,14 @@ TEST(Test_s21_queue, s21_queue_test_emplace_back) {
 }
 
 TEST(Test_s21_queue, s21_queue_test_emplace_back_2) {
-  s21::s21_vector<int> s21_vector_1{1, 2, 3, 4, 5, 6, 7};
-  s21_vector_1.emplace_back(8, 9, 10, 11, 12, 13, 14, 15);
+  s21::s21_queue<int> s21_queue_1{1, 2, 3, 4, 5, 6, 7};
+  s21_queue_1.emplace_back(8, 9, 10, 11, 12, 13, 14, 15);
   int count = 1;
-  for (auto &&i : s21_vector_1) {
-    // cout << "std_list: " << count << " == " << "s21_list: " << i << endl;
-    ASSERT_EQ(i, count);
+  for (size_t i = s21_queue_1.get_size(); i > 0; i--) {
+    ASSERT_EQ(s21_queue_1.front(), count);
+    // cout << "std_queue 2: " << std_queue_2.front() << " " <<
+    // "s21_queue 2: " << s21_queue_2.front() << endl;
+    s21_queue_1.pop();
     count++;
   }
 }
@@ -1378,13 +1560,13 @@ TEST(Test_s21_set, s21_set_test_set_1) {
     ASSERT_EQ(i, *x);
     x++;
   }
-
   auto y = s21_set_1.begin();
   for (auto &i : std_set_1) {
-    // cout << "s21_set: " << *y << endl;
+    // cout << "s21_set: " << *y << " == " << i << endl;
     ASSERT_EQ(i, *y);
     y++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_iterator_1) {
@@ -1392,13 +1574,13 @@ TEST(Test_s21_set, s21_set_test_iterator_1) {
                               4,  16, 18, 12, 14, -1, 1,  -5, 11};
   set<int> std_set_1{10, 5,  15, 3,  7,  13, 17, 6,  8, 2,
                      4,  16, 18, 12, 14, -1, 1,  -5, 11};
-
   auto i = s21_set_1.end();
   for (auto y = std_set_1.end(); y != std_set_1.begin(); y--) {
     ASSERT_EQ(*i, *y);
     // cout << "s21_set: " << *y << " == " << *i << endl;
     i--;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_operator) {
@@ -1416,6 +1598,7 @@ TEST(Test_s21_set, s21_set_test_operator) {
     ASSERT_EQ(i, *x);
     x++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_constructor) {
@@ -1431,6 +1614,7 @@ TEST(Test_s21_set, s21_set_test_constructor) {
     ASSERT_EQ(i, *x);
     x++;
   }
+  ASSERT_EQ(s21_set_2.get_size(), std_set_2.size());
 }
 
 TEST(Test_s21_set, s21_set_test_swap) {
@@ -1448,6 +1632,7 @@ TEST(Test_s21_set, s21_set_test_swap) {
     ASSERT_EQ(i, *x);
     x++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_merge) {
@@ -1472,6 +1657,7 @@ TEST(Test_s21_set, s21_set_test_merge) {
     ASSERT_EQ(i, *y);
     y++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_contains) {
@@ -1526,6 +1712,7 @@ TEST(Test_s21_set, s21_set_test_erase_0) {
     ASSERT_EQ(i, *s21_it);
     s21_it++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_erase_1) {
@@ -1552,6 +1739,7 @@ TEST(Test_s21_set, s21_set_test_erase_1) {
     ASSERT_EQ(i, *s21_it);
     s21_it++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_erase_2) {
@@ -1583,6 +1771,7 @@ TEST(Test_s21_set, s21_set_test_erase_2) {
     ASSERT_EQ(i, *s21_it);
     s21_it++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_erase_3) {
@@ -1614,6 +1803,37 @@ TEST(Test_s21_set, s21_set_test_erase_3) {
     ASSERT_EQ(i, *s21_it);
     s21_it++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
+}
+
+TEST(Test_s21_set, s21_set_test_erase_3_5) {
+  s21::s21_set<int> s21_set_1{5, 3, 7, 2, 4, 6, 8};
+  set<int> std_set_1{5, 3, 7, 2, 4, 6, 8};
+  auto x = s21_set_1.begin();
+  auto y = std_set_1.begin();
+
+  for (size_t i = 0; i < 5; i++) {
+    x++;
+    y++;
+  }
+
+  s21_set_1.erase(x);
+  std_set_1.erase(y);
+
+  auto it = std_set_1.begin();
+  for (auto &i : s21_set_1) {
+    // cout << "s21_set: " << i << " == " << *it << endl;
+    ASSERT_EQ(i, *it);
+    it++;
+  }
+
+  auto s21_it = s21_set_1.begin();
+  for (auto &i : std_set_1) {
+    // cout << "s21_set: " << *s21_it << endl;
+    ASSERT_EQ(i, *s21_it);
+    s21_it++;
+  }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_erase_4) {
@@ -1644,6 +1864,7 @@ TEST(Test_s21_set, s21_set_test_erase_4) {
     ASSERT_EQ(i, *s21_it);
     s21_it++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_max_size) {
@@ -1653,6 +1874,7 @@ TEST(Test_s21_set, s21_set_test_max_size) {
                       4,  16, 18, 12, 14, -1, 1,  -5, 11};
 
   ASSERT_EQ(s21_set_1.max_size(), s21_set_1.max_size());
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_emplace_1) {
@@ -1679,6 +1901,7 @@ TEST(Test_s21_set, s21_set_test_emplace_1) {
     ASSERT_EQ(i, *s21_it);
     s21_it++;
   }
+  ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
 }
 
 TEST(Test_s21_set, s21_set_test_emplace_2) {
@@ -1688,13 +1911,31 @@ TEST(Test_s21_set, s21_set_test_emplace_2) {
                               16, 18, 12, 14, -1, 1,  -5, 11, 344, -25, 666};
   s21_set_1.emplace(344, -25, 666);
 
-  auto it = s21_set_1.begin();
-  for (auto &i : s21_set_1) {
-    // cout << "s21_set: " << i << " == " << *it << endl;
-    ASSERT_EQ(i, *it);
-    it++;
-  }
+  // auto it = s21_set_1.begin();
+  // for (auto &i : s21_set_1) {
+  //   // cout << "s21_set: " << i << " == " << *it << endl;
+  //   ASSERT_EQ(i, *it);
+  //   it++;
+  // }
 }
+
+// TEST(Test_s21_set, s21_set_BIG_SET) {
+//   s21::s21_set<int> s21_set_1;
+//   set<int> std_set_1;
+//   int rand_count = 0;
+//   for (size_t i = 0; i < 1000; i++) {
+//     rand_count = std::rand() % 10000;
+//     s21_set_1.insert(rand_count);
+//     std_set_1.insert(rand_count);
+//   }
+//   ASSERT_EQ(s21_set_1.get_size(), std_set_1.size());
+//   auto s21_it = s21_set_1.begin();
+//   for (auto &i : std_set_1) {
+//     // cout << "s21_set: " << *s21_it << " == " << i << endl;
+//     ASSERT_EQ(i, *s21_it);
+//     s21_it++;
+//   }
+// }
 
 /**********************/
 /****** ___MAP___ *****/
@@ -1722,8 +1963,8 @@ TEST(Test_s21_map, s21_map_test_map_2) {
   auto y = std_map_1.end();
   for (auto i = s21_map_1.end(); i != s21_map_1.begin(); --i, --y) {
     if (i != s21_map_1.end()) {
-      // std::cout << (*i).first << " ( " << (*i).second << " )" << " == " <<
-      // (*y).first << " ( " << (*y).second << " )" << std::endl;
+      // std::cout << (*i).first << " ( " << (*i).second << " )" << " == "
+      // << (*y).first << " ( " << (*y).second << " )" << std::endl;
       ASSERT_EQ((*i).first, (*y).first);
       ASSERT_EQ((*i).second, (*y).second);
     }
@@ -2230,11 +2471,6 @@ TEST(Test_s21_multiset, s21_multiset_test_max_size) {
   ASSERT_EQ(s21_multiset_1.max_size(), s21_multiset_1.max_size());
 }
 
-int main(int argc, char *argv[]) {
-  testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
-
 TEST(Test_s21_multiset, s21_set_test_emplace_1) {
   s21::s21_multiset<int> s21_multiset_1{10, 5,  15, 3,  7,  13, 17, 6,  8, 2,
                                         4,  16, 18, 12, 14, -1, 1,  -5, 11};
@@ -2275,4 +2511,9 @@ TEST(Test_s21_multiset, s21_multiset_test_emplace_2) {
     ASSERT_EQ(i, *it);
     it++;
   }
+}
+
+int main(int argc, char *argv[]) {
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }

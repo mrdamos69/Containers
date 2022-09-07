@@ -49,8 +49,10 @@ class abstract_containers {
   size_t m_size;  // количество элементов в списке
  public:
   abstract_containers() : m_size(0) {}
-  size_t virtual max_size() = 0;  // возвращает максимально возможное количество
-                                  // элементов
+  size_t virtual max_size() {
+    return std::numeric_limits<size_t>::max() / (sizeof(T));
+  }
+  // возвращает максимально возможное количество элементов
   bool empty() { return !(this->m_size > 0); }  // проверяет, пуст ли контейнер
   size_t get_size() { return this->m_size; }  // возвращает количество элементов
 };

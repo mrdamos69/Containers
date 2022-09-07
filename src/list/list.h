@@ -15,8 +15,11 @@ template <typename T>
 class const_iterator_cl : public abstract_iterator<T> {
  public:
   Node<T> *const_current;
+  Node<T> *begin_current;
   const_iterator_cl() : const_current(0) {}
-  explicit const_iterator_cl(Node<T> *curr) : const_current(curr) {}
+  explicit const_iterator_cl(Node<T> *curr) : const_current(curr) {
+    begin_current = const_current;
+  }
   T &operator*() { return const_current->data; }
   bool operator==(const const_iterator_cl &right);
   bool operator!=(const const_iterator_cl &right);
@@ -89,7 +92,7 @@ class s21_list : public abstract_containers_list<T> {
   const_reference back();  // получить доступ к последнему элементу
 
   iterator begin() { return this->head; }  // возвращает итератор в начало
-  iterator end() { return this->tail->pNext; }  // возвращает итератор в конец
+  iterator end() { return this->tail; }  // возвращает итератор в конец
 
   template <typename... Arg>
   iterator emplace(iterator pos, T value, Arg &&...args);
