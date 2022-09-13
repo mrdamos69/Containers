@@ -2,6 +2,7 @@
 #ifndef S21_MAP_H
 #define S21_MAP_H
 #include <initializer_list>
+#include <iostream>
 #include <utility>
 
 #include "../s21_abstract_class.h"
@@ -14,7 +15,7 @@ class const_iterator_map {
   Key_Map<T, T2> *const_current;
   const_iterator_map() : const_current(0) {}
   explicit const_iterator_map(Key_Map<T, T2> *curr) : const_current(curr) {}
-  std::pair<T, T2> &operator*() { return const_current->data_; }
+  std::pair<T, T2> &operator*() { return const_current->data; }
   bool operator==(const const_iterator_map &right);
   bool operator!=(const const_iterator_map &right);
 };
@@ -95,7 +96,9 @@ class s21_map : public abstract_containers_tree<T> {
   template <typename... Arg>
   s21::s21_vector<std::pair<iterator, bool>> emplace(std::pair<T, T2> value,
                                                      Arg &&...args);
-  bool emplace() { return true; }
+  std::pair<iterator, bool> emplace() {
+    return std::pair<iterator, bool>(this->end(), true);
+  }
 
  private:
   std::pair<iterator, bool> input_in_branch(Key_Map<T, T2> *branch,
@@ -104,7 +107,6 @@ class s21_map : public abstract_containers_tree<T> {
   void back_to_root();
   Key_Map<T, T2> *go_to_begin(Key_Map<T, T2> *key);
   void set_copy(Key_Map<T, T2> *other);
-  s21_map<T, T2> set_merge(s21_map &other);
 };
 }  // namespace s21
 

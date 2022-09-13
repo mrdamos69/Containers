@@ -15,39 +15,39 @@ bool s21::const_iterator_map<T, T2>::operator!=(
 template <typename T, typename T2>
 s21::iterator_map<T, T2> &s21::iterator_map<T, T2>::operator++() {
   if (it_end()) {
-    this->const_current = this->const_current->pRight_;
+    this->const_current = this->const_current->pRight;
     return *this;
   }
 
-  if (this->const_current->pRoot_ == this->const_current) {
-    this->const_current = this->const_current->pRight_;
-    while (this->const_current->pLeft_->pLeft_ != nullptr) {
-      this->const_current = this->const_current->pLeft_;
+  if (this->const_current->pRoot == this->const_current) {
+    this->const_current = this->const_current->pRight;
+    while (this->const_current->pLeft->pLeft != nullptr) {
+      this->const_current = this->const_current->pLeft;
     }
     return *this;
   }
 
-  if (this->const_current->data_.first <
-          this->const_current->pRight_->data_.first &&
-      this->const_current->pRight_->pRight_) {
-    this->const_current = this->const_current->pRight_;
+  if (this->const_current->data.first <
+          this->const_current->pRight->data.first &&
+      this->const_current->pRight->pRight) {
+    this->const_current = this->const_current->pRight;
 
-    while (this->const_current->pLeft_->pLeft_ != nullptr) {
-      this->const_current = this->const_current->pLeft_;
+    while (this->const_current->pLeft->pLeft != nullptr) {
+      this->const_current = this->const_current->pLeft;
     }
     return *this;
   }
 
-  T temp = this->const_current->data_.first;
-  this->const_current = this->const_current->pBack_;
+  T temp = this->const_current->data.first;
+  this->const_current = this->const_current->pBack;
 
-  if (temp == this->const_current->pLeft_->data_.first) {
+  if (temp == this->const_current->pLeft->data.first) {
     return *this;
-  } else if (temp == this->const_current->pRight_->data_.first) {
-    this->const_current = this->const_current->pBack_;
-    if (this->const_current->pRight_->pRight_ &&
-        temp == this->const_current->pRight_->pRight_->data_.first) {
-      this->const_current = this->const_current->pBack_;
+  } else if (temp == this->const_current->pRight->data.first) {
+    this->const_current = this->const_current->pBack;
+    if (this->const_current->pRight->pRight &&
+        temp == this->const_current->pRight->pRight->data.first) {
+      this->const_current = this->const_current->pBack;
     }
     return *this;
   }
@@ -56,43 +56,43 @@ s21::iterator_map<T, T2> &s21::iterator_map<T, T2>::operator++() {
 
 template <typename T, typename T2>
 s21::iterator_map<T, T2> &s21::iterator_map<T, T2>::operator--() {
-  if (this->const_current->pRoot_ == this->const_current) {
-    this->const_current = this->const_current->pLeft_;
-    while (this->const_current->pLeft_->pRight_ != nullptr) {
-      this->const_current = this->const_current->pRight_;
+  if (this->const_current->pRoot == this->const_current) {
+    this->const_current = this->const_current->pLeft;
+    while (this->const_current->pLeft->pRight != nullptr) {
+      this->const_current = this->const_current->pRight;
     }
     return *this;
   }
 
-  if (!this->const_current->pLeft_ && !this->const_current->pRight_) {
-    this->const_current = this->const_current->pBack_;
+  if (!this->const_current->pLeft && !this->const_current->pRight) {
+    this->const_current = this->const_current->pBack;
     return *this;
   }
 
-  if (this->const_current->pLeft_->data_.first <
-          this->const_current->data_.first &&
-      this->const_current->pLeft_->pLeft_ != nullptr) {
-    this->const_current = this->const_current->pLeft_;
-    while (this->const_current->pRight_->pRight_ != nullptr) {
-      this->const_current = this->const_current->pRight_;
+  if (this->const_current->pLeft->data.first <
+          this->const_current->data.first &&
+      this->const_current->pLeft->pLeft != nullptr) {
+    this->const_current = this->const_current->pLeft;
+    while (this->const_current->pRight->pRight != nullptr) {
+      this->const_current = this->const_current->pRight;
     }
     return *this;
   }
 
-  T temp = this->const_current->data_.first;
-  this->const_current = this->const_current->pBack_;
+  T temp = this->const_current->data.first;
+  this->const_current = this->const_current->pBack;
 
-  if (temp == this->const_current->pRight_->data_.first &&
-      this->const_current->pRight_ != nullptr) {
+  if (temp == this->const_current->pRight->data.first &&
+      this->const_current->pRight != nullptr) {
     return *this;
   }
 
-  if (temp == this->const_current->pLeft_->data_.first) {
-    this->const_current = this->const_current->pBack_;
-    if (this->const_current->pLeft_->pLeft_ &&
-        temp == this->const_current->pLeft_->pLeft_->data_.first) {
-      while (this->const_current->pBack_ != nullptr) {
-        this->const_current = this->const_current->pBack_;
+  if (temp == this->const_current->pLeft->data.first) {
+    this->const_current = this->const_current->pBack;
+    if (this->const_current->pLeft->pLeft &&
+        temp == this->const_current->pLeft->pLeft->data.first) {
+      while (this->const_current->pBack != nullptr) {
+        this->const_current = this->const_current->pBack;
       }
     }
     return *this;
@@ -102,15 +102,15 @@ s21::iterator_map<T, T2> &s21::iterator_map<T, T2>::operator--() {
 
 template <typename T, typename T2>
 bool s21::iterator_map<T, T2>::it_end() {
-  T it_end_count = this->const_current->data_.first;
+  T it_end_count = this->const_current->data.first;
   Key_Map<T, T2> *temp = this->const_current;
-  while (temp->pBack_ != nullptr) {
-    temp = temp->pBack_;
+  while (temp->pBack != nullptr) {
+    temp = temp->pBack;
   }
-  while (temp->pRight_->pRight_ != nullptr) {
-    temp = temp->pRight_;
+  while (temp->pRight->pRight != nullptr) {
+    temp = temp->pRight;
   }
-  if (temp->data_.first == it_end_count) {
+  if (temp->data.first == it_end_count) {
     return true;
   }
   return false;
@@ -154,9 +154,9 @@ s21::s21_map<T, T2> s21::s21_map<T, T2>::operator=(const s21_map &m) {
 template <typename T, typename T2>
 T &s21::s21_map<T, T2>::at(const Key_Map<key_type, mapped_type> &key) {
   for (auto i = this->begin(); i != this->end(); ++i) {
-    if ((*i).first == key.data_.first) {
-      if ((*i).second == key.data_.second) {
-        return i.const_current->data_.second;
+    if ((*i).first == key.data.first) {
+      if ((*i).second == key.data.second) {
+        return i.const_current->data.second;
       }
     }
   }
@@ -166,40 +166,40 @@ T &s21::s21_map<T, T2>::at(const Key_Map<key_type, mapped_type> &key) {
 template <typename T, typename T2>
 T2 &s21::s21_map<T, T2>::operator[](const Key_Map<key_type, mapped_type> &key) {
   for (auto i = this->begin(); i != this->end(); ++i) {
-    if ((*i).first == key.data_.first) {
-      if ((*i).second == key.data_.second) {
-        return i.const_current->data_.second;
+    if ((*i).first == key.data.first) {
+      if ((*i).second == key.data.second) {
+        return i.const_current->data.second;
       }
     }
   }
-  this->insert(key.data_);
-  return this->element->data_.second;
+  this->insert(key.data);
+  return this->element->data.second;
 }
 
 template <typename T, typename T2>
 T2 &s21::s21_map<T, T2>::operator[](const key_type &key) {
   for (auto i = this->begin(); i != this->end(); ++i) {
     if ((*i).first == key) {
-      return i.const_current->data_.second;
+      return i.const_current->data.second;
     }
   }
-  return this->element->data_.second;
+  return this->element->data.second;
 }
 
 template <typename T, typename T2>
 void s21::s21_map<T, T2>::clear() {
   clear(this->element);
-  if (back_elem != nullptr) delete back_elem;
+  delete back_elem;
   this->m_size = 0;
   this->back_elem = nullptr;
 }
 
 template <typename T, typename T2>
 void s21::s21_map<T, T2>::clear(Key_Map<key_type, mapped_type> *key) {
-  if (key->pLeft_ && key->pRight_) {
-    this->clear(key->pLeft_);
-    this->clear(key->pRight_);
-    if (key != nullptr) delete key;
+  if (key->pLeft && key->pRight) {
+    this->clear(key->pLeft);
+    this->clear(key->pRight);
+    delete key;
     (this->m_size)--;
   }
 }
@@ -220,10 +220,10 @@ s21::s21_map<T, T2>::insert(
   if (element == nullptr) {
     element = new Key_Map<T, T2>();
     back_elem = new Key_Map<T, T2>();
-    element->pRoot_ = element;
-    element->data_ = value;
-    element->pLeft_ = back_elem;
-    element->pRight_ = back_elem;
+    element->pRoot = element;
+    element->data = value;
+    element->pLeft = back_elem;
+    element->pRight = back_elem;
     ++(this->m_size);
     return std::pair<iterator, bool>(this->element, true);
   }
@@ -237,31 +237,31 @@ std::pair<typename s21::s21_map<T, T2>::iterator, bool>
 s21::s21_map<T, T2>::input_in_branch(
     s21::Key_Map<T, T2> *branch,
     const typename s21::s21_map<T, T2>::value_type &value) {
-  if (branch->data_.first > value.first) {
-    if (branch->pLeft_ != back_elem) {
-      input_in_branch(branch->pLeft_, value);
+  if (branch->data.first > value.first) {
+    if (branch->pLeft != back_elem) {
+      input_in_branch(branch->pLeft, value);
     } else {
-      branch->pLeft_ = new Key_Map<T, T2>();
-      branch->pLeft_->pBack_ = branch;
-      branch = branch->pLeft_;
-      branch->data_ = value;
-      branch->pLeft_ = back_elem;
-      branch->pRight_ = back_elem;
-      back_elem->pBack_ = branch;
+      branch->pLeft = new Key_Map<T, T2>();
+      branch->pLeft->pBack = branch;
+      branch = branch->pLeft;
+      branch->data = value;
+      branch->pLeft = back_elem;
+      branch->pRight = back_elem;
+      back_elem->pBack = branch;
       ++(this->m_size);
       return std::pair<iterator, bool>(branch, true);
     }
-  } else if (branch->data_.first < value.first) {
-    if (branch->pRight_ != back_elem) {
-      input_in_branch(branch->pRight_, value);
+  } else if (branch->data.first < value.first) {
+    if (branch->pRight != back_elem) {
+      input_in_branch(branch->pRight, value);
     } else {
-      branch->pRight_ = new Key_Map<T, T2>();
-      branch->pRight_->pBack_ = branch;
-      branch = branch->pRight_;
-      branch->data_ = value;
-      branch->pLeft_ = back_elem;
-      branch->pRight_ = back_elem;
-      back_elem->pBack_ = branch;
+      branch->pRight = new Key_Map<T, T2>();
+      branch->pRight->pBack = branch;
+      branch = branch->pRight;
+      branch->data = value;
+      branch->pLeft = back_elem;
+      branch->pRight = back_elem;
+      back_elem->pBack = branch;
       ++(this->m_size);
       return std::pair<iterator, bool>(branch, true);
     }
@@ -272,17 +272,17 @@ s21::s21_map<T, T2>::input_in_branch(
 template <typename T, typename T2>
 void s21::s21_map<T, T2>::I_ll_be_back() {
   back_to_root();
-  while (this->element->pRight_ != back_elem) {
-    this->element = this->element->pRight_;
+  while (this->element->pRight != back_elem) {
+    this->element = this->element->pRight;
   }
-  back_elem->pBack_ = this->element;
+  back_elem->pBack = this->element;
   back_to_root();
 }
 
 template <typename T, typename T2>
 void s21::s21_map<T, T2>::back_to_root() {
-  while (element->pBack_ != nullptr) {
-    element = element->pBack_;
+  while (element->pBack != nullptr) {
+    element = element->pBack;
   }
 }
 
@@ -315,46 +315,46 @@ s21::s21_map<T, T2>::insert_or_assign(const key_type &key,
 template <typename T, typename T2>
 void s21::s21_map<T, T2>::erase(typename s21::s21_map<T, T2>::iterator pos) {
   for (auto &&i = begin(); i != end(); ++i) {
-    if (*i == pos.const_current->data_) {
-      if ((pos.const_current->pLeft_ == back_elem) &&
-          (pos.const_current->pRight_ == back_elem)) {
-        if (pos.const_current->pBack_->pRight_->data_.first ==
-            pos.const_current->data_.first) {
-          pos.const_current->pBack_->pRight_ = back_elem;
+    if (*i == pos.const_current->data) {
+      if ((pos.const_current->pLeft == back_elem) &&
+          (pos.const_current->pRight == back_elem)) {
+        if (pos.const_current->pBack->pRight->data.first ==
+            pos.const_current->data.first) {
+          pos.const_current->pBack->pRight = back_elem;
         }
-        if (pos.const_current->pBack_->pLeft_->data_.first ==
-            pos.const_current->data_.first) {
-          pos.const_current->pBack_->pLeft_ = back_elem;
+        if (pos.const_current->pBack->pLeft->data.first ==
+            pos.const_current->data.first) {
+          pos.const_current->pBack->pLeft = back_elem;
         }
-        if (pos.const_current != nullptr) delete pos.const_current;
+        delete pos.const_current;
         (this->m_size)--;
         break;
       } else {
-        if (pos.const_current->pRoot_ == pos.const_current) {
+        if (pos.const_current->pRoot == pos.const_current) {
           Key_Map<T, T2> *temp_data = pos.const_current;
-          pos.const_current = pos.const_current->pRight_;
-          while (pos.const_current->pLeft_ != back_elem) {
-            pos.const_current = pos.const_current->pLeft_;
+          pos.const_current = pos.const_current->pRight;
+          while (pos.const_current->pLeft != back_elem) {
+            pos.const_current = pos.const_current->pLeft;
           }
-          temp_data->data_ = pos.const_current->data_;
-          pos.const_current->pBack_->pLeft_ = back_elem;
-          if (pos.const_current != nullptr) delete pos.const_current;
+          temp_data->data.first = pos.const_current->data.first;
+          pos.const_current->pBack->pLeft = back_elem;
+          delete pos.const_current;
           (this->m_size)--;
           break;
         } else {
           back_to_root();
 
-          if (pos.const_current->pBack_->pRight_->data_.first ==
-              pos.const_current->data_.first) {
-            pos.const_current->pBack_->pRight_ = back_elem;
+          if (pos.const_current->pBack->pRight->data.first ==
+              pos.const_current->data.first) {
+            pos.const_current->pBack->pRight = back_elem;
           }
-          if (pos.const_current->pBack_->pLeft_->data_.first ==
-              pos.const_current->data_.first) {
-            pos.const_current->pBack_->pLeft_ = back_elem;
+          if (pos.const_current->pBack->pLeft->data.first ==
+              pos.const_current->data.first) {
+            pos.const_current->pBack->pLeft = back_elem;
           }
-          pos.const_current->pBack_ = nullptr;
-          set_copy(pos.const_current->pLeft_);
-          set_copy(pos.const_current->pRight_);
+          pos.const_current->pBack = nullptr;
+          set_copy(pos.const_current->pLeft);
+          set_copy(pos.const_current->pRight);
           this->clear(pos.const_current);
           (this->m_size)--;
           break;
@@ -377,18 +377,6 @@ void s21::s21_map<T, T2>::merge(const s21_map &other) {
 }
 
 template <typename T, typename T2>
-s21::s21_map<T, T2> s21::s21_map<T, T2>::set_merge(s21_map &other) {
-  s21::s21_map<T, T2> new_other;
-  for (auto x = other.begin(); x != other.end(); ++x) {
-    for (auto i = this->begin(); i != this->end(); ++i) {
-      if (*x == *i) new_other.insert(*x);
-    }
-  }
-  this->set_copy(other.element);
-  return new_other;
-}
-
-template <typename T, typename T2>
 bool s21::s21_map<T, T2>::contains(const key_type &key) {
   for (auto i = this->begin(); i != this->end(); ++i) {
     if ((*i).first == key) return true;
@@ -407,16 +395,16 @@ typename s21::s21_map<T, T2>::iterator s21::s21_map<T, T2>::contains(
 
 template <typename T, typename T2>
 void s21::s21_map<T, T2>::set_copy(Key_Map<T, T2> *other) {
-  if (other->pLeft_ && other->pRight_) {
-    this->set_copy(other->pLeft_);
-    this->insert(other->data_);
-    this->set_copy(other->pRight_);
+  if (other->pLeft && other->pRight) {
+    this->set_copy(other->pLeft);
+    this->insert(other->data);
+    this->set_copy(other->pRight);
   }
 }
 
 template <typename T, typename T2>
 s21::Key_Map<T, T2> *s21::s21_map<T, T2>::go_to_begin(Key_Map<T, T2> *key) {
-  while (key->pLeft_ != back_elem) key = key->pLeft_;
+  while (key->pLeft != back_elem) key = key->pLeft;
   return key;
 }
 
@@ -424,7 +412,7 @@ template <typename T, typename T2>
 template <typename... Arg>
 s21::s21_vector<std::pair<typename s21::s21_map<T, T2>::iterator, bool>>
 s21::s21_map<T, T2>::emplace(std::pair<T, T2> value, Arg &&...args) {
-  s21::s21_vector<std::pair<iterator, bool>> result(this->m_size);
+  s21::s21_vector<std::pair<iterator, bool>> result;
   result.push_back(this->insert(value.first, value.second));
   this->emplace(std::forward<Arg>(args)...);
   return result;

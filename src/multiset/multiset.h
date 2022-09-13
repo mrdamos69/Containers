@@ -2,6 +2,7 @@
 #ifndef S21_MULTISET_H
 #define S21_MULTISET_H
 #include <initializer_list>
+#include <iostream>
 #include <utility>
 
 #include "../set/set.h"

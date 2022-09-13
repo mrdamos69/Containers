@@ -13,34 +13,34 @@ class abstract_iterator {
 template <typename T>
 class Node {
  public:
-  Node *pNext_;
-  Node *pBack_;
-  T data_;
-  explicit Node(T data_ = T(), Node *pNext_ = nullptr, Node *pBack_ = nullptr) {
-    this->data_ = data_;
-    this->pNext_ = pNext_;
-    this->pBack_ = pBack_;
+  Node *pNext;
+  Node *pBack;
+  T data;
+  explicit Node(T data = T(), Node *pNext = nullptr, Node *pBack = nullptr) {
+    this->data = data;
+    this->pNext = pNext;
+    this->pBack = pBack;
   }
 };
 
 template <typename T>
 class Key {
  public:
-  Key *pLeft_ = nullptr;
-  Key *pRight_ = nullptr;
-  Key *pBack_ = nullptr;
-  Key *pRoot_ = nullptr;
-  T data_ = 0;
+  Key *pLeft = nullptr;
+  Key *pRight = nullptr;
+  Key *pBack = nullptr;
+  Key *pRoot = nullptr;
+  T data = 0;
 };
 
 template <typename T, typename T2>
 class Key_Map {
  public:
-  Key_Map *pLeft_ = nullptr;
-  Key_Map *pRight_ = nullptr;
-  Key_Map *pBack_ = nullptr;
-  Key_Map *pRoot_ = nullptr;
-  std::pair<T, T2> data_;
+  Key_Map *pLeft = nullptr;
+  Key_Map *pRight = nullptr;
+  Key_Map *pBack = nullptr;
+  Key_Map *pRoot = nullptr;
+  std::pair<T, T2> data;
 };
 
 template <typename T>
@@ -60,38 +60,34 @@ class abstract_containers {
 template <typename T>
 class abstract_containers_list : public abstract_containers<T> {
  protected:
-  Node<T> *head_;  // указатель на следующий элемент списка
-  Node<T> *tail_;  // указатель на предыдущий элемент списка
+  Node<T> *head;  // указатель на следующий элемент списка
+  Node<T> *tail;  // указатель на предыдущий элемент списка
  public:
   abstract_containers_list()
-      : abstract_containers<T>(), head_(nullptr), tail_(nullptr) {}
+      : abstract_containers<T>(), head(nullptr), tail(nullptr) {}
 };
 
 template <typename T>
 class abstract_containers_arr : public abstract_containers<T> {
  protected:
   size_t m_capacity;
-  T *arr_;
+  T *arr;
 
  public:
   abstract_containers_arr()
-      : abstract_containers<T>(), m_capacity(0), arr_(nullptr) {}
-  T *begin() { return this->arr_; }  // возвращает итератор в начало
-  T *end() { return this->arr_ + this->m_size; }
+      : abstract_containers<T>(), m_capacity(0), arr(nullptr) {}
+  T *begin() { return this->arr; }  // возвращает итератор в начало
+  T *end() { return this->arr + this->m_size; }
   // возвращает итератор в конец
-  const T &front() { return arr_[0]; }
+  const T &front() { return arr[0]; }
   // получить доступ к первому элементу
-  const T &back() { return arr_[this->m_size - 1]; }
+  const T &back() { return arr[this->m_size - 1]; }
   // получить доступ к последнему элементу
-  T &operator[](size_t pos) {
-    return pos > 0 ? this->arr_[pos] : this->arr_[0];
-  }
+  T &operator[](size_t pos) { return pos > 0 ? this->arr[pos] : this->arr[0]; }
   // доступ к указанному элементу
-  T &at(size_t pos) {
-    return pos < this->m_size ? this->arr_[pos] : this->arr_[0];
-  }
+  T &at(size_t pos) { return pos < this->m_size ? arr[pos] : arr[0]; }
   // доступ к указанному элементу с проверкой границ
-  T *data_() { return this->arr_; }
+  T *data() { return this->arr; }
   // прямой доступ к базовому массиву
 };
 

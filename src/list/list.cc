@@ -2,18 +2,18 @@
 
 template <typename T>
 bool s21::const_iterator_cl<T>::operator==(const const_iterator_cl<T> &right) {
-  return (this->const_current->data_ == right.const_current->data_);
+  return (this->const_current->data == right.const_current->data);
 }
 
 template <typename T>
 bool s21::const_iterator_cl<T>::operator!=(const const_iterator_cl &right) {
-  return !(this->const_current->data_ == right.const_current->data_);
+  return !(this->const_current->data == right.const_current->data);
 }
 
 template <typename T>
 s21::iterator_cl<T> &s21::iterator_cl<T>::operator++() {
-  if (this->const_current->pNext_ != nullptr)
-    this->const_current = this->const_current->pNext_;
+  if (this->const_current->pNext != nullptr)
+    this->const_current = this->const_current->pNext;
   else
     this->const_current = this->begin_current;
   return *this;
@@ -21,8 +21,8 @@ s21::iterator_cl<T> &s21::iterator_cl<T>::operator++() {
 
 template <typename T>
 s21::iterator_cl<T> &s21::iterator_cl<T>::operator--() {
-  if (this->const_current->pBack_ != nullptr)
-    this->const_current = this->const_current->pBack_;
+  if (this->const_current->pBack != nullptr)
+    this->const_current = this->const_current->pBack;
   return *this;
 }
 
@@ -50,16 +50,16 @@ s21::s21_list<T>::s21_list(size_type n) : s21_list() {
 
 template <typename T>
 s21::s21_list<T>::s21_list(const s21_list &l) : s21_list() {
-  Node<value_type> *current = l.head_;
-  while (current != l.tail_) {
-    this->push_back(current->data_);
-    current = current->pNext_;
+  Node<value_type> *current = l.head;
+  while (current != l.tail) {
+    this->push_back(current->data);
+    current = current->pNext;
   }
 }
 
 template <typename T>
 s21::s21_list<T>::s21_list(s21_list &&l) : s21_list<T>(l) {
-  if (this->head_ == l.head_)
+  if (this->head == l.head)
     throw std::invalid_argument("s21_list argument too large.");
   l.clear();
 }
@@ -78,37 +78,37 @@ s21::s21_list<T>::~s21_list() {
 }
 
 template <typename T>
-void s21::s21_list<T>::push_back(value_type data_) {
-  if (this->head_ == nullptr && this->tail_ == nullptr) {
-    this->head_ = new Node<T>(data_);
-    this->tail_ = new Node<T>;
-    this->head_->pNext_ = this->tail_;
-    this->tail_->pNext_ = nullptr;
+void s21::s21_list<T>::push_back(value_type data) {
+  if (this->head == nullptr && this->tail == nullptr) {
+    this->head = new Node<T>(data);
+    this->tail = new Node<T>;
+    this->head->pNext = this->tail;
+    this->tail->pNext = nullptr;
   } else {
-    Node<T> *current = this->head_;
-    while (current->pNext_ != this->tail_) {
-      current = current->pNext_;
+    Node<T> *current = this->head;
+    while (current->pNext != this->tail) {
+      current = current->pNext;
     }
     Node<T> *temp = current;
-    current->pNext_ = new Node<T>(data_);
-    current = current->pNext_;
-    current->pBack_ = temp;
-    this->tail_->pBack_ = current;
-    current->pNext_ = this->tail_;
+    current->pNext = new Node<T>(data);
+    current = current->pNext;
+    current->pBack = temp;
+    this->tail->pBack = current;
+    current->pNext = this->tail;
   }
   (this->m_size)++;
 }
 
 template <typename T>
-void s21::s21_list<T>::push_front(value_type data_) {
-  if (this->head_ == nullptr && this->tail_ == nullptr) {
-    this->head_ = new Node<value_type>(data_, this->head_);
-    this->tail_ = new Node<T>;
-    this->head_->pNext_ = this->tail_;
-    this->tail_->pBack_ = this->head_;
-    this->tail_->pNext_ = nullptr;
+void s21::s21_list<T>::push_front(value_type data) {
+  if (this->head == nullptr && this->tail == nullptr) {
+    this->head = new Node<value_type>(data, this->head);
+    this->tail = new Node<T>;
+    this->head->pNext = this->tail;
+    this->tail->pBack = this->head;
+    this->tail->pNext = nullptr;
   } else {
-    this->head_ = new Node<value_type>(data_, this->head_);
+    this->head = new Node<value_type>(data, this->head);
   }
   (this->m_size)++;
 }
@@ -120,40 +120,40 @@ void s21::s21_list<T>::pop_back() {
 
 template <typename T>
 void s21::s21_list<T>::pop_front() {
-  Node<value_type> *current = this->head_;
-  this->head_ = this->head_->pNext_;
-  if (current != nullptr) delete current;
+  Node<value_type> *current = this->head;
+  this->head = this->head->pNext;
+  delete current;
   (this->m_size)--;
 }
 
 template <typename T>
 T &s21::s21_list<T>::operator[](const int index) {
   int counter = 0;
-  Node<value_type> *current = this->head_;
+  Node<value_type> *current = this->head;
   while (current != nullptr) {
     if (counter == index) {
-      return current->data_;
+      return current->data;
     }
-    current = current->pNext_;
+    current = current->pNext;
     counter++;
   }
-  return this->head_->data_;
+  return this->head->data;
 }
 
 template <typename T>
 s21::s21_list<T> &s21::s21_list<T>::operator=(const s21_list &l) {
-  if (this->head_) {
+  if (this->head) {
     this->clear();
   }
-  this->set_copy(l.head_, l.tail_);
+  this->set_copy(l.head, l.tail);
   return *this;
 }
 
 template <typename T>
 void s21::s21_list<T>::set_copy(Node<T> *other, Node<T> *end) {
   if (other != end) {
-    this->push_back(other->data_);
-    this->set_copy(other->pNext_, end);
+    this->push_back(other->data);
+    this->set_copy(other->pNext, end);
   }
 }
 
@@ -164,11 +164,11 @@ typename s21::s21_list<T>::iterator s21::s21_list<T>::insert(size_t index,
   if (index == 0) {
     push_front(value);
   } else {
-    Node<T> *current = this->head_;
+    Node<T> *current = this->head;
     for (size_t i = 0; i < index - 1; i++, ++result) {
-      current = current->pNext_;
+      current = current->pNext;
     }
-    current->pNext_ = new Node<value_type>(value, current->pNext_);
+    current->pNext = new Node<value_type>(value, current->pNext);
     (this->m_size)++;
   }
   return ++result;
@@ -185,15 +185,15 @@ typename s21::s21_list<T>::iterator s21::s21_list<T>::insert(
   if (index == 0) {
     push_front(value);
   } else {
-    current = this->head_;
+    current = this->head;
     for (size_t y = 0; y < index - 1; y++) {
-      current = current->pNext_;
+      current = current->pNext;
     }
-    current->pNext_ = new Node<value_type>(value, current->pNext_);
+    current->pNext = new Node<value_type>(value, current->pNext);
     (this->m_size)++;
   }
   iterator_cl<T> result;
-  result.const_current = current->pNext_;
+  result.const_current = current->pNext;
   return result;
 }
 
@@ -202,13 +202,13 @@ void s21::s21_list<T>::erase(int index) {
   if (index == 0) {
     pop_front();
   } else {
-    Node<value_type> *current = this->head_;
+    Node<value_type> *current = this->head;
     for (int i = 0; i < index - 1; i++) {
-      current = current->pNext_;
+      current = current->pNext;
     }
-    Node<value_type> *to_delete = current->pNext_;
-    current->pNext_ = to_delete->pNext_;
-    if (to_delete != nullptr) delete to_delete;
+    Node<value_type> *to_delete = current->pNext;
+    current->pNext = to_delete->pNext;
+    delete to_delete;
     (this->m_size)--;
   }
 }
@@ -248,21 +248,21 @@ void s21::s21_list<T>::sort() {
 
 template <typename T>
 void s21::s21_list<T>::merge(const s21_list &other) {
-  this->set_copy(other.head_, other.tail_);
+  this->set_copy(other.head, other.tail);
   this->sort();
 }
 
 template <typename T>
 void s21::s21_list<T>::unique() {
-  Node<value_type> *current = this->head_;
+  Node<value_type> *current = this->head;
   s21_list<T> temp;
   T temp_data;
-  while (current != this->tail_) {
-    if (temp_data != current->data_) {
-      temp.push_back(current->data_);
-      temp_data = current->data_;
+  while (current != this->tail) {
+    if (temp_data != current->data) {
+      temp.push_back(current->data);
+      temp_data = current->data;
     }
-    current = current->pNext_;
+    current = current->pNext;
   }
   *this = temp;
 }
@@ -291,28 +291,28 @@ void s21::s21_list<T>::clear() {
   while (this->m_size) {
     this->pop_front();
   }
-  if (this->tail_ != nullptr) {
-    if (this->tail_ != nullptr) delete this->tail_;
+  if (this->tail != nullptr) {
+    delete this->tail;
   }
-  this->tail_ = nullptr;
-  this->head_ = nullptr;
+  this->tail = nullptr;
+  this->head = nullptr;
 }
 
 template <typename T>
 const T &s21::s21_list<T>::front() {
-  return this->head_->data_;
+  return this->head->data;
 }
 
 template <typename T>
 const T &s21::s21_list<T>::back() {
-  if (this->head_ == nullptr) {
-    return this->head_->data_;
+  if (this->head == nullptr) {
+    return this->head->data;
   } else {
-    Node<value_type> *current = this->head_;
-    while (current->pNext_ != this->tail_) {
-      current = current->pNext_;
+    Node<value_type> *current = this->head;
+    while (current->pNext != this->tail) {
+      current = current->pNext;
     }
-    return current->data_;
+    return current->data;
   }
 }
 

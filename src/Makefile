@@ -87,10 +87,11 @@ check:
 git: clean
 	@git add *.cc *.h Makefile Dockerfile *.sh scripts/* ./*/*.cc ./*/*.h
 	@git commit -m "add changes ${m}"
-	@git push origin develop
+	@git push origin brittabu
 
 valgrind:
 	@./run.sh
 
 leaks: $(ALL_FILE_O)
 	@CK_FORK=no valgrind --vgdb=no --leak-check=full --show-leak-kinds=all --tool=memcheck --track-origins=yes --verbose --log-file=RESULT_VALGRIND.txt ./s21_test
+

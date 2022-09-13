@@ -3,6 +3,7 @@
 #define S21_QUEUE_H
 
 #include <initializer_list>
+#include <iostream>
 #include <utility>
 
 #include "../s21_abstract_class.h"
@@ -11,7 +12,7 @@ namespace s21 {
 template <typename T>
 class s21_queue : public abstract_containers_list<T> {
  private:
-  void push_front(T data_);
+  void push_front(T data);
   void reverse();
   void clear();
 
@@ -38,14 +39,15 @@ class s21_queue : public abstract_containers_list<T> {
   const_reference front();  // получить доступ к первому элементу
   const_reference back();  //
 
-  void push(value_type data_);  // добавляет элемент в голову
-  void pop();                   // удаляет первый элемент
+  void push(value_type data);  // добавляет элемент в голову
+  void pop();                  // удаляет первый элемент
   void swap(s21_queue &other);  // Меняет местами элементы двух списков
                                 //   size_t max_size() override;
 
   template <typename... Arg>
-  void emplace_back(T value, Arg &&...args);
-  // добавляет новые элементы в конец контейнера
+  void emplace_back(
+      T value,
+      Arg &&...args);  // добавляет новые элементы в конец контейнера
   void emplace_back() {}
 };
 }  // namespace s21

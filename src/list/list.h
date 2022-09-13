@@ -3,6 +3,7 @@
 #define S21_LIST_H
 
 #include <initializer_list>
+#include <iostream>
 #include <utility>
 
 #include "../s21_abstract_class.h"
@@ -19,7 +20,7 @@ class const_iterator_cl : public abstract_iterator<T> {
   explicit const_iterator_cl(Node<T> *curr) : const_current(curr) {
     begin_current = const_current;
   }
-  T &operator*() { return const_current->data_; }
+  T &operator*() { return const_current->data; }
   bool operator==(const const_iterator_cl &right);
   bool operator!=(const const_iterator_cl &right);
 };
@@ -69,8 +70,8 @@ class s21_list : public abstract_containers_list<T> {
   size_type max_size() override;
   // возвращает максимально возможное количество элементов
 
-  void push_back(value_type data_);  // добавляет элемент в конец
-  void push_front(value_type data_);  // добавляет элемент в голову
+  void push_back(value_type data);  // добавляет элемент в конец
+  void push_front(value_type data);  // добавляет элемент в голову
   void pop_back();   // удаляет последний элемент
   void pop_front();  // удаляет первый элемент
 
@@ -90,8 +91,8 @@ class s21_list : public abstract_containers_list<T> {
   const_reference front();  // получить доступ к первому элементу
   const_reference back();  // получить доступ к последнему элементу
 
-  iterator begin() { return this->head_; }  // возвращает итератор в начало
-  iterator end() { return this->tail_; }  // возвращает итератор в конец
+  iterator begin() { return this->head; }  // возвращает итератор в начало
+  iterator end() { return this->tail; }  // возвращает итератор в конец
 
   template <typename... Arg>
   iterator emplace(iterator pos, T value, Arg &&...args);
@@ -99,13 +100,15 @@ class s21_list : public abstract_containers_list<T> {
   // вставляет новые элементы в контейнер непосредственно перед pos
 
   template <typename... Arg>
-  void emplace_back(T value, Arg &&...args);
-  // добавляет новые элементы в конец контейнера
+  void emplace_back(
+      T value,
+      Arg &&...args);  // добавляет новые элементы в конец контейнера
   void emplace_back() {}
 
   template <typename... Arg>
-  void emplace_front(T value, Arg &&...args);
-  // добавляет новые элементы в верхнюю часть контейнера
+  void emplace_front(
+      T value,
+      Arg &&...args);  // добавляет новые элементы в верхнюю часть контейнера
   void emplace_front() {}
 
   void clear();  // очищает содержимое

@@ -3,6 +3,7 @@
 #define S21_ARRAY_H
 
 #include <initializer_list>
+#include <iostream>
 #include <utility>
 
 #include "../s21_abstract_class.h"
@@ -23,9 +24,7 @@ class s21_array : public abstract_containers_arr<T> {
   s21_array(const s21_array &v);
 
   s21_array(s21_array &&v) : s21_array(v) { v.clear(); }
-  ~s21_array() {
-    if (this->arr_ != nullptr) delete[] this->arr_;
-  }
+  ~s21_array() { delete[] this->arr; }
 
   s21_array<T, SIZE> &operator=(const s21_array<T, SIZE> &v);
   // Перегрузка оператора присваивания для движущегося объекта

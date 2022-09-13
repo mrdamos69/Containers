@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <iostream>
 #include <utility>
+#include <vector>
 
 #include "../s21_abstract_class.h"
 #include "../vector/vector.h"
@@ -15,7 +16,7 @@ class const_iterator_set : public abstract_iterator<T> {
   Key<T> *const_current;
   const_iterator_set() : const_current(0) {}
   explicit const_iterator_set(Key<T> *curr) : const_current(curr) {}
-  T &operator*() { return const_current->data_; }
+  T &operator*() { return const_current->data; }
   bool operator==(const const_iterator_set &right);
   bool operator!=(const const_iterator_set &right);
 };
@@ -37,10 +38,10 @@ class iterator_set : public const_iterator_set<T> {
 template <typename T>
 class s21_set : public abstract_containers_tree<T> {
  protected:
+  // size_t m_size;  // количество элементов в set
   Key<T> *element;
   Key<T> *back_elem;
   void I_ll_be_back() override;
-  s21_set<T> set_merge(s21_set &other);
 
  public:
   using key_type = T;  // первый параметр шаблона (ключ)
@@ -82,7 +83,7 @@ class s21_set : public abstract_containers_tree<T> {
 
   void erase(iterator pos);   // стирает элемент в позиции
   void swap(s21_set &other);  // меняет содержимое
-  void merge(s21_set &other);  // соединяет узлы из другого контейнера
+  void merge(const s21_set &other);  // соединяет узлы из другого контейнера
   iterator find(const Key<T> &key);
   // находит элемент с определенным ключом
 
@@ -92,7 +93,9 @@ class s21_set : public abstract_containers_tree<T> {
 
   template <typename... Arg>
   s21::s21_vector<std::pair<iterator, bool>> emplace(T value, Arg &&...args);
-  bool emplace() { return true; }
+  std::pair<iterator, bool> emplace() {
+    return std::pair<iterator, bool>(this->end(), true);
+  }
 
  private:
   void back_to_root() override;

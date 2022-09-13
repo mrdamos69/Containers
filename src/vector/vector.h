@@ -3,6 +3,7 @@
 #define S21_VECTOR_H
 
 #include <initializer_list>
+#include <iostream>
 #include <utility>
 
 #include "../s21_abstract_class.h"
@@ -29,7 +30,7 @@ class s21_vector : public abstract_containers_arr<T> {
   s21_vector(const s21_vector &v) : s21_vector(v.m_size) { *this = v; }
   s21_vector(s21_vector &&v);
   ~s21_vector() {
-    if (this->arr_ != nullptr) delete[] this->arr_;
+    if (this->arr) delete[] this->arr;
   }
 
   s21_vector<T> &operator=(const s21_vector &v);
@@ -63,8 +64,9 @@ class s21_vector : public abstract_containers_arr<T> {
   // вставляет новые элементы в контейнер непосредственно перед pos
 
   template <typename... Arg>
-  void emplace_back(T value, Arg &&...args);
-  // добавляет новые элементы в конец контейнера
+  void emplace_back(
+      T value,
+      Arg &&...args);  // добавляет новые элементы в конец контейнера
   void emplace_back() {}
 };
 }  // namespace s21
