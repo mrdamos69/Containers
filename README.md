@@ -1,39 +1,42 @@
 # s21_containers
-Реализация библиотеки s21_containers.h.
 
-### Introduction
+Implementation of the `s21_containers.h` library in C++, which includes standard container classes such as `list`, `map`, `queue`, `set`, `stack`, and `vector`. The library adheres to the C++17 standard and is developed using the GCC compiler. The code follows the Google Style, is contained within the `s21` namespace, and features comprehensive unit tests using the GTest library.
 
-В рамках данного проекта я написал собственную библиотеку, реализующую основные стандартные контейнерные классы языка С++: `list` (список), `map` (словарь), `queue` (очередь), `set` (множество), `stack` (стек) и `vector` (вектор). Реализация представляет весь набор стандартных методов и атрибутов для работы с элементами, проверкой заполненности контейнера и итерирования. В качестве дополнительного задания реализовано еще несколько не так часто используемых, но отличающихся деталями реализации контейнерных классов из контейнерной библиотеки C++.
+## Introduction
 
-- Программа разработана на языке C++ стандарта C++17 с использованием компилятора gcc
-- При написание кода придерживалось Google Style
-- Классы реализованы внутри пространства имен `s21`
-- Подготовлено полное покрытие unit-тестами методов контейнерных классов c помощью библиотеки GTest
-- Не было использовано реализаций стандартной библиотеки шаблонов (STL)
-- При написании соблюдалась логика работы стандартной библиотеки шаблонов (STL) (в части проверок, работы с памятью и поведения в нештатных ситуациях)
+As part of this project, a custom library (`s21_containers.h`) has been developed, implementing essential standard container classes in C++. The library provides a comprehensive set of standard methods and attributes for each container, including `list`, `map`, `queue`, `set`, `stack`, and `vector`. Additionally, less commonly used container classes with varying implementation details have been included as part of the library.
 
-### Part 1. Реализация библиотеки s21_containers.h
+- **Language:** C++ (C++17 standard).
+- **Compiler:** GCC.
+- **Coding Style:** Google Style.
+- **Namespace:** `s21`.
+- **Testing:** Full coverage with GTest library.
+- **No STL:** The implementation does not rely on the Standard Template Library (STL).
+- **Logic Adherence:** The logic of the Standard Template Library (STL) has been observed during development.
 
-Реализованы классы библиотеки `s21_containers.h`
-Список классов: `list` (список), `map` (словарь), `queue` (очередь), `set` (множество), `stack` (стек), `vector` (вектор).
-- Оформлено решение в виде заголовочного файла `s21_containers.h`, который включает в себя другие заголовочные файлы с реализациями необходимых контейнеров (`s21_list.h`, `s21_map.h` и т.д.)
-- Предусмотрен Makefile для тестов написанной библиотеки (с целями clean, test)
+## Part 1. Implementation of `s21_containers.h` library
 
-### Part 2. Реализация библиотеки s21_containersplus.h
+The primary library (`s21_containers.h`) includes classes such as `list`, `map`, `queue`, `set`, `stack`, and `vector`. The solution is provided in a header file (`s21_containers.h`), with separate header files for container implementations (`s21_list.h`, `s21_map.h`, etc.). The project includes a Makefile for running tests.
 
-Реализованы функции библиотеки `s21_containersplus.h` (спецификации указаны в соответствующих разделах материалов, см. пункт **"Дополнительные контейнеры"**). \
-Список классов, которые нужно реализовать дополнительно: `array` (массив), `multiset` (мультимножество).
-- Оформлено решение в виде заголовочного файла `s21_containersplus.h`, который включает в себя другие заголовочные файлы с реализациями необходимых контейнеров (`s21_array.h`, `s21_multiset.h`)
-- Предусмотрен Makefile для тестов написанной библиотеки (с целями clean, test)
-- За основу стоит рассматривать классическую реализацию контейнеров, но конечный выбор алгоритма остается свободным
+## Part 2. Implementation of `s21_containersplus.h` library
 
-### Part 3. Реализация модифицированных методов `emplace`
+The extended library (`s21_containersplus.h`) introduces additional functions for less commonly used container classes, including `array` and `multiset`. Similar to Part 1, the solution is provided in a header file (`s21_containersplus.h`), with separate header files for container implementations (`s21_array.h`, `s21_multiset.h`). A Makefile is included for running tests, and the final choice of algorithms remains flexible.
 
-Дополнены классы соответствующими методами, согласно таблице:
+## Part 3. Implementation of modified `emplace` methods
 
-| Modifiers      | Definition                                      | Containers |
-|----------------|-------------------------------------------------| -------------------------------------------|
-| `iterator emplace(const_iterator pos, Args&&... args)`          | inserts new elements into the container directly before `pos`  | List, Vector |
-| `void emplace_back(Args&&... args)`          | appends new elements to the end of the container  | List, Vector, Queue |
-| `void emplace_front(Args&&... args)`          | appends new elements to the top of the container  | List, Stack |
-| `std::pair<iterator,bool> emplace(Args&&... args)`          | inserts new elements into the container  | Map, Set, Multiset |
+The classes have been enhanced with modified `emplace` methods, following the specifications outlined in the table:
+
+| Modifiers | Definition | Containers |
+| ---------- | ----------------------------------------------- | ------------------------------------- |
+| `iterator emplace(const_iterator pos, Args&&... args)` | Inserts new elements into the container directly before `pos`. | List, Vector |
+| `void emplace_back(Args&&... args)` | Appends new elements to the end of the container. | List, Vector, Queue |
+| `void emplace_front(Args&&... args)` | Appends new elements to the top of the container. | List, Stack |
+| `std::pair<iterator,bool> emplace(Args&&... args)` | Inserts new elements into the container. | Map, Set, Multiset |
+
+## Usage
+
+To run tests for the libraries, use the provided Makefile with the following goals:
+
+```bash
+make clean   # Clean the project files
+make test    # Run tests
